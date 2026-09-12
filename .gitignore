@@ -1,0 +1,56 @@
+# never publish source or local runtime
+*.py
+*.pyw
+*.pyc
+*.pyo
+*.pyd
+*.so
+*.dll
+*.spec
+*.c
+*.cpp
+*.h
+*.rs
+*.go
+*.ts
+*.tsx
+*.js
+*.jsx
+
+# binaries belong on Releases, not in git
+*.exe
+*.msi
+*.msix
+*.appx
+*.dmg
+*.app
+*.apk
+dist/
+build/
+installer/
+portable/
+
+# secrets and machine state
+oma_config.yaml
+oma_gui.yaml
+modellist.yaml
+*.local.yaml
+*.local.json
+.env
+.env.*
+
+# caches / venv / projects
+.venv/
+venv/
+__pycache__/
+.opencode/
+.oma_attachments/
+models/
+*.safetensors
+*.log
+
+# tools
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

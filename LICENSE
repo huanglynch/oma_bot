@@ -1,0 +1,41 @@
+Proprietary Software License
+
+Copyright (c) 2026 OMA Bot Desktop. All rights reserved.
+
+This repository distributes precompiled binaries and accompanying
+documentation only. Source code is not published and is not licensed
+for use, copying, modification, or redistribution.
+
+1. Grant
+   Subject to this license, you may download the official binary from
+   the Releases page of this repository and run it for your own
+   personal or internal evaluation and use.
+
+2. Restrictions
+   You may not:
+   - copy, publish, sublicense, sell, or redistribute the software
+     except by sharing the official Releases URL;
+   - reverse engineer, decompile, or disassemble the binary, except
+     to the limited extent that applicable law prohibits this
+     restriction;
+   - remove or alter copyright, trademark, or license notices;
+   - use the software to provide a competing hosted service that
+     wraps this binary;
+   - claim that this project is open source.
+
+3. Third-party components
+   The binary may include third-party libraries under their own
+   licenses (for example NiceGUI, Python, and other runtime
+   dependencies). Those licenses continue to apply to those
+   components. This file does not grant rights in any large-language
+   model weights or vendor APIs you connect at runtime.
+
+4. No warranty
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
+   THE AUTHORS ARE NOT LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER
+   LIABILITY ARISING FROM USE OF THE SOFTWARE.
+
+5. Source
+   Requests for source code are declined. This is intentional.
+   Issues that report reproducible runtime defects in the published
+   binary may still be accepted.
