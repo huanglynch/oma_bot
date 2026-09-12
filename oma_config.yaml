@@ -1,0 +1,93 @@
+# OMA Core 1.1 — 精简配置
+agent:
+  name: main
+  model: "{env:OMA_LLM_MODEL}"
+  base_url: "{env:OMA_BASE_URL}"
+  api_key: "{env:OMA_API_KEY}"
+  temperature: 0.2
+  max_tokens: 8192
+  max_iterations: 80
+
+runtime:
+  max_concurrent_bots: 2          # 组队建议 4
+  default_command_timeout: 300
+  parallel_readonly_tools: true
+  llm_retry: 3
+  llm_retry_base_delay: 2
+  llm_min_interval: 0.5
+
+routing:
+  enabled: false
+  main_model: "{env:OMA_LLM_MODEL}"
+  fast_model: "{env:OMA_LLM_MODEL}"
+
+catalog:
+  extra_skill_dirs: [".oma/skills", ".opencode/skills"]
+  extra_agent_dirs: [".oma/agents", ".opencode/agents"]
+  skill_content_max_chars: 12000
+  capability_catalog_max_chars: 3000
+
+context:
+  max_tokens: 128000
+  chars_per_token: 3.5
+  sliding_window: 12
+  summary_watermark: 0.70
+  hard_watermark: 0.85
+  task_state_inject_every: 3
+  goal_reinject_every: 4
+  tool_result_max_chars: 5000
+
+team:
+  enabled: true
+  default_wait: collect
+  child_max_iterations: 40
+  child_summary_max_chars: 1200
+  board_inject_every: 2
+  board_comment_keep: 3
+  idle_wait: false
+  lease_unknown_bash: require_star
+  swarm:
+    enabled: false          # GUI 开关可覆盖
+    max_workers: 3
+    specialists: []         # 空=按目标关键词 + catalog 自动选
+    always_include: []
+
+hooks:
+  before_write: true
+  after_task: true
+  on_error: true
+
+command_safety:
+  enabled: true
+  blacklist:
+    - "rm -rf"
+    - "rm -r /"
+    - "sudo rm"
+    - "mkfs"
+    - "dd if=/dev"
+    - "shutdown"
+    - "reboot"
+    - "halt"
+    - "poweroff"
+    - ":(){ :|:& };:"
+    - "curl http"
+    - "wget http"
+    - "format"
+    - "del /s"
+    - "rmdir /s"
+  extra_danger_patterns: []
+  max_output_chars: 5000
+  audit_log: "command_audit.log"
+
+trace:
+  dir: "runs"
+  include_prompts: false
+
+interrupt:
+  enabled: true
+  default_timeout_sec: 300
+  on_approval_timeout: deny
+  on_question_timeout: keep
+  max_questions_per_bot: 8
+  max_approvals_per_bot: 40
+  remember_session: true
