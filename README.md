@@ -136,14 +136,3 @@ Get-FileHash .\OMA-Bot-Portable.zip -Algorithm SHA256
 
 **这是投资或办公 SaaS 吗？**  
 不是。输出由你接入的模型产生，作者不对生成内容负责。
-
----
-
-## 发布说明给仓库主人
-
-你自己发版时走 [docs/PUBLISH.md](docs/PUBLISH.md)：
-
-- Git 里只提交本目录这些说明文件
-- EXE / zip **只挂 Release 资产**，不要 `git add *.exe`
-- 单文件不要超过 100 MB；更大就打 zip 分卷或换网盘并在 Release 正文放链接
-- 永远不要把 `oma_config.yaml`、Key、用户项目目录打进安装包示例
