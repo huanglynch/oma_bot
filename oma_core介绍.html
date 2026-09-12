@@ -1,0 +1,2575 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMA Core 1.1 · 数字员工编制与技术文档</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   LIGHT THEME (DEFAULT)
+══════════════════════════════════════════ */
+:root {
+  --bg:        #f0ebe0;
+  --bg2:       #e8e3d7;
+  --bg3:       #ddd8cc;
+  --bg4:       #d2ccbe;
+  --border:    #c5bfb2;
+  --border2:   #b5afa2;
+  --text:      #2a2520;
+  --text2:     #5a5450;
+  --text3:     #8a8480;
+  --blue:      #1a6bbd;
+  --blue2:     #1558a8;
+  --green:     #1a8a5e;
+  --orange:    #c8620a;
+  --purple:    #7040c8;
+  --red:       #b83030;
+  --yellow:    #a07818;
+  --cyan:      #0e7fa8;
+  --teal:      #0e8a80;
+  --shadow:    rgba(0,0,0,.12);
+  --shadow2:   rgba(0,0,0,.22);
+  --code-bg:   #1a1f2e;
+  --code-bg2:  #141824;
+  --code-bdr:  #252f46;
+  --scrollbar-thumb: #b5afa2;
+  /* ── SVG 架构图专用文字色（明亮模式深色） ── */
+  --svg-main:  #1e1a16;
+  --svg-sub:   #3a3530;
+  --svg-dim:   #5a5450;
+  --svg-faint: #7a7470;
+}
+
+/* ══════════════════════════════════════════
+   DARK THEME
+══════════════════════════════════════════ */
+html[data-theme="dark"] {
+  --bg:        #070c18;
+  --bg2:       #0d1322;
+  --bg3:       #141c30;
+  --bg4:       #1b253d;
+  --border:    #1d2d46;
+  --border2:   #2a3e5e;
+  --text:      #cdd9f0;
+  --text2:     #7a93b8;
+  --text3:     #4a5e7a;
+  --blue:      #4d9de8;
+  --blue2:     #7bb8f8;
+  --green:     #3ecf8e;
+  --orange:    #f5923c;
+  --purple:    #9b7fe8;
+  --red:       #e55f5f;
+  --yellow:    #f0c040;
+  --cyan:      #38bdf8;
+  --teal:      #2dd4bf;
+  --shadow:    rgba(0,0,0,.35);
+  --shadow2:   rgba(0,0,0,.55);
+  --code-bg:   #050c1a;
+  --code-bg2:  #0d1322;
+  --code-bdr:  #1d2d46;
+  --scrollbar-thumb: #2a3e5e;
+  /* ── SVG 架构图专用文字色（暗色模式浅色） ── */
+  --svg-main:  #cdd9f0;
+  --svg-sub:   #9bb4d0;
+  --svg-dim:   #7a93b8;
+  --svg-faint: #4a5e7a;
+}
+
+/* ══════════════════════════════════════════
+   RESET & BASE
+══════════════════════════════════════════ */
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',-apple-system,sans-serif;
+  background:var(--bg);color:var(--text);
+  line-height:1.7;overflow-x:hidden;
+  transition:background .3s,color .3s;
+}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--scrollbar-thumb);border-radius:3px}
+
+/* ── Progress bar ── */
+.progress-bar{
+  position:fixed;top:0;left:0;height:2px;
+  background:linear-gradient(90deg,var(--blue),var(--purple),var(--teal));
+  z-index:500;transition:width .1s;pointer-events:none;
+}
+
+/* ══════════════════════════════════════════
+   THEME TOGGLE
+══════════════════════════════════════════ */
+.theme-toggle-wrap{padding:14px 16px;border-top:1px solid var(--border);flex-shrink:0}
+.theme-toggle-btn{
+  width:100%;display:flex;align-items:center;gap:8px;
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:8px;padding:8px 12px;cursor:pointer;
+  font-family:'Inter',sans-serif;font-size:12px;color:var(--text2);
+  transition:all .2s;
+}
+.theme-toggle-btn:hover{border-color:var(--border2);background:var(--bg4)}
+.theme-icon{font-size:14px;flex-shrink:0}
+.theme-label{flex:1;text-align:left;font-weight:500}
+.toggle-track{
+  width:32px;height:18px;border-radius:9px;background:var(--border2);
+  position:relative;transition:background .3s;flex-shrink:0;
+}
+html[data-theme="dark"] .toggle-track{background:var(--blue)}
+.toggle-knob{
+  position:absolute;top:2px;left:2px;width:14px;height:14px;
+  border-radius:50%;background:#fff;transition:transform .25s;
+  box-shadow:0 1px 3px rgba(0,0,0,.3);
+}
+html[data-theme="dark"] .toggle-knob{transform:translateX(14px)}
+
+/* ══════════════════════════════════════════
+   SIDEBAR
+══════════════════════════════════════════ */
+.sidebar{
+  position:fixed;top:0;left:0;width:252px;height:100vh;
+  background:var(--bg2);border-right:1px solid var(--border);
+  overflow-y:auto;z-index:100;display:flex;flex-direction:column;
+  transition:background .3s,border-color .3s;
+}
+.sidebar-logo{padding:22px 18px 14px;border-bottom:1px solid var(--border)}
+.sidebar-logo h2{
+  font-size:14px;font-weight:700;color:var(--blue2);
+  letter-spacing:.03em;display:flex;align-items:center;gap:7px;
+}
+.logo-hex{
+  width:22px;height:22px;background:linear-gradient(135deg,var(--blue),var(--purple));
+  border-radius:5px;display:inline-flex;align-items:center;
+  justify-content:center;font-size:11px;color:#fff;
+}
+.sidebar-logo .ver{
+  font-size:10px;color:var(--text3);margin-top:4px;
+  font-family:'JetBrains Mono',monospace;
+}
+.sidebar-nav{padding:10px 0;flex:1}
+.nav-cat{
+  padding:10px 18px 3px;font-size:9px;font-weight:700;
+  color:var(--text3);text-transform:uppercase;letter-spacing:.12em;
+}
+.nav-item{
+  display:flex;align-items:center;gap:8px;padding:7px 18px;
+  font-size:12.5px;color:var(--text2);text-decoration:none;
+  transition:all .15s;cursor:pointer;border-left:2px solid transparent;
+}
+.nav-item:hover,.nav-item.active{
+  color:var(--blue2);background:rgba(77,157,232,.08);border-left-color:var(--blue);
+}
+.nav-item .ni{font-size:13px;width:16px;flex-shrink:0;text-align:center}
+
+/* ══════════════════════════════════════════
+   MAIN
+══════════════════════════════════════════ */
+.main{margin-left:252px}
+
+/* ══════════════════════════════════════════
+   HERO
+══════════════════════════════════════════ */
+.hero{
+  position:relative;padding:72px 56px 56px;
+  background:var(--bg2);border-bottom:1px solid var(--border);
+  overflow:hidden;transition:background .3s;
+}
+.hero-bg{
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 700px 400px at 85% 40%,rgba(77,157,232,.06),transparent),
+    radial-gradient(ellipse 400px 500px at 0% 100%,rgba(155,127,232,.05),transparent);
+}
+.hero-grid{
+  position:absolute;inset:0;pointer-events:none;opacity:.04;
+  background-image:
+    linear-gradient(var(--border2) 1px,transparent 1px),
+    linear-gradient(90deg,var(--border2) 1px,transparent 1px);
+  background-size:40px 40px;
+}
+html[data-theme="light"] .hero-grid{opacity:.06}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(77,157,232,.1);border:1px solid rgba(77,157,232,.22);
+  border-radius:20px;padding:4px 13px;font-size:11.5px;
+  color:var(--blue2);margin-bottom:18px;font-family:'JetBrains Mono',monospace;
+}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.85)}}
+.hero h1{
+  font-size:40px;font-weight:800;line-height:1.15;margin-bottom:14px;
+  background:linear-gradient(135deg,var(--text) 0%,var(--blue2) 55%,var(--purple) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+html[data-theme="dark"] .hero h1{
+  background:linear-gradient(135deg,#fff 0%,var(--blue2) 55%,var(--purple) 100%);
+  -webkit-background-clip:text;background-clip:text;
+}
+.hero-sub{font-size:15px;color:var(--text2);max-width:580px;margin-bottom:34px;line-height:1.85}
+.hero-stats{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:28px}
+.stat{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:10px;padding:14px 18px;min-width:100px;transition:background .3s;
+}
+.stat .n{
+  font-size:22px;font-weight:700;color:var(--text);
+  font-family:'JetBrains Mono',monospace;line-height:1;
+}
+.stat .l{font-size:10.5px;color:var(--text3);margin-top:4px;text-transform:uppercase;letter-spacing:.04em}
+
+/* ── Feature cards ── */
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-top:28px}
+.feat-card{
+  background:var(--bg3);border:1px solid var(--border);border-radius:10px;
+  padding:14px 16px;transition:all .2s;
+}
+.feat-card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 6px 20px var(--shadow)}
+.feat-icon{font-size:20px;margin-bottom:7px}
+.feat-card h4{font-size:12.5px;font-weight:600;color:var(--text);margin-bottom:4px}
+.feat-card p{font-size:11.5px;color:var(--text3);line-height:1.6;margin:0}
+.feat-accent{display:block;width:28px;height:2px;border-radius:2px;margin-bottom:8px}
+
+/* ══════════════════════════════════════════
+   SECTIONS
+══════════════════════════════════════════ */
+.section{padding:52px 56px;border-bottom:1px solid var(--border);transition:border-color .3s}
+.sec-hd{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.sec-num{
+  width:30px;height:30px;border-radius:7px;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;color:#fff;flex-shrink:0;
+}
+.sec-title{font-size:24px;font-weight:700;color:var(--text)}
+.sec-sub{font-size:13.5px;color:var(--text2);margin-bottom:30px;padding-left:42px;line-height:1.7}
+h3.stitle{
+  font-size:15px;font-weight:600;color:var(--text);
+  margin:28px 0 12px;display:flex;align-items:center;gap:8px;
+}
+h3.stitle::before{content:'';width:3px;height:16px;background:var(--blue);border-radius:2px;flex-shrink:0}
+p{color:var(--text2);font-size:13.5px;line-height:1.9;margin-bottom:10px}
+
+/* ══════════════════════════════════════════
+   CODE BLOCKS — always dark
+══════════════════════════════════════════ */
+.code-block{
+  background:var(--code-bg);border:1px solid var(--code-bdr);
+  border-radius:10px;overflow:hidden;margin:14px 0;position:relative;
+}
+.code-hd{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 14px;background:var(--code-bg2);border-bottom:1px solid var(--code-bdr);
+}
+.dots{display:flex;gap:5px}
+.d{width:10px;height:10px;border-radius:50%}
+.dr{background:#ff5f57}.dy{background:#ffbd2e}.dg{background:#28c840}
+.lang-tag{font-size:10.5px;color:#4a5e7a;font-family:'JetBrains Mono',monospace}
+.copy-btn{
+  background:transparent;border:1px solid #2a3e5e;border-radius:4px;
+  padding:2px 9px;font-size:10.5px;color:#4a5e7a;cursor:pointer;
+  transition:all .15s;font-family:'JetBrains Mono',monospace;
+}
+.copy-btn:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+pre{
+  padding:16px 18px;overflow-x:auto;
+  font-family:'JetBrains Mono',monospace;
+  font-size:12.5px;line-height:1.75;color:#9bb4d0;tab-size:2;
+}
+.kw{color:#c678dd}.str{color:#98c379}.num{color:#d19a66}
+.cmt{color:#4d5f7a;font-style:italic}.fn{color:#61afef}
+.cls{color:#e5c07b}.op{color:#56b6c2}.vr{color:#e06c75}
+.ky{color:#e06c75}.vl{color:#98c379}.sy{color:#9bb4d0}
+.tg{color:#38bdf8}.bl{color:#f5923c}
+
+/* ══════════════════════════════════════════
+   TABLES
+══════════════════════════════════════════ */
+.tbl-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+thead{background:var(--bg3)}
+th{
+  padding:10px 14px;text-align:left;font-size:10.5px;font-weight:600;
+  text-transform:uppercase;letter-spacing:.06em;color:var(--text3);
+  border-bottom:1px solid var(--border);white-space:nowrap;
+}
+td{padding:9px 14px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(128,128,128,.04)}
+.ci{
+  font-family:'JetBrains Mono',monospace;font-size:11.5px;
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:4px;padding:1px 6px;color:var(--blue2);white-space:nowrap;
+}
+
+/* ══════════════════════════════════════════
+   BADGES
+══════════════════════════════════════════ */
+.badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10.5px;font-weight:600;white-space:nowrap}
+.b-blue{background:rgba(26,107,189,.1);color:var(--blue2);border:1px solid rgba(26,107,189,.25)}
+.b-green{background:rgba(26,138,94,.1);color:var(--green);border:1px solid rgba(26,138,94,.25)}
+.b-orange{background:rgba(200,98,10,.1);color:var(--orange);border:1px solid rgba(200,98,10,.25)}
+.b-red{background:rgba(184,48,48,.1);color:var(--red);border:1px solid rgba(184,48,48,.25)}
+.b-purple{background:rgba(112,64,200,.1);color:var(--purple);border:1px solid rgba(112,64,200,.25)}
+.b-gray{background:rgba(90,84,80,.08);color:var(--text2);border:1px solid var(--border)}
+.b-teal{background:rgba(14,138,128,.1);color:var(--teal);border:1px solid rgba(14,138,128,.25)}
+html[data-theme="dark"] .b-blue{background:rgba(77,157,232,.12);color:var(--blue2);border-color:rgba(77,157,232,.22)}
+html[data-theme="dark"] .b-green{background:rgba(62,207,142,.1);color:var(--green);border-color:rgba(62,207,142,.22)}
+html[data-theme="dark"] .b-orange{background:rgba(245,146,60,.1);color:var(--orange);border-color:rgba(245,146,60,.22)}
+html[data-theme="dark"] .b-red{background:rgba(229,95,95,.1);color:var(--red);border-color:rgba(229,95,95,.22)}
+html[data-theme="dark"] .b-purple{background:rgba(155,127,232,.1);color:var(--purple);border-color:rgba(155,127,232,.22)}
+html[data-theme="dark"] .b-gray{background:rgba(122,147,184,.08);color:var(--text2);border-color:var(--border)}
+html[data-theme="dark"] .b-teal{background:rgba(45,212,191,.1);color:var(--teal);border-color:rgba(45,212,191,.22)}
+
+/* ══════════════════════════════════════════
+   TABS
+══════════════════════════════════════════ */
+.tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:22px;overflow-x:auto;gap:0}
+.tab{
+  padding:9px 17px;font-size:12.5px;color:var(--text2);
+  cursor:pointer;border-bottom:2px solid transparent;
+  transition:all .15s;white-space:nowrap;user-select:none;
+}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--blue2);border-bottom-color:var(--blue)}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* ══════════════════════════════════════════
+   ALERTS
+══════════════════════════════════════════ */
+.alert{
+  border-radius:8px;padding:12px 16px;margin:12px 0;
+  font-size:12.5px;display:flex;gap:9px;align-items:flex-start;line-height:1.7;
+}
+.alert-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+.a-info{background:rgba(26,107,189,.07);border:1px solid rgba(26,107,189,.2);color:var(--text)}
+.a-warn{background:rgba(200,98,10,.07);border:1px solid rgba(200,98,10,.2);color:var(--text)}
+.a-danger{background:rgba(184,48,48,.07);border:1px solid rgba(184,48,48,.2);color:var(--text)}
+.a-success{background:rgba(26,138,94,.07);border:1px solid rgba(26,138,94,.2);color:var(--text)}
+html[data-theme="dark"] .a-info{background:rgba(77,157,232,.07);border-color:rgba(77,157,232,.18)}
+html[data-theme="dark"] .a-warn{background:rgba(245,146,60,.07);border-color:rgba(245,146,60,.18)}
+html[data-theme="dark"] .a-danger{background:rgba(229,95,95,.07);border-color:rgba(229,95,95,.18)}
+html[data-theme="dark"] .a-success{background:rgba(62,207,142,.07);border-color:rgba(62,207,142,.18)}
+
+/* ══════════════════════════════════════════
+   CARDS
+══════════════════════════════════════════ */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin:16px 0}
+.card{
+  background:var(--bg3);border:1px solid var(--border);border-radius:11px;
+  padding:18px;transition:all .2s;cursor:default;
+}
+.card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 8px 24px var(--shadow)}
+.card-icon{font-size:22px;margin-bottom:9px}
+.card h4{font-size:13px;font-weight:600;color:var(--text);margin-bottom:5px}
+.card p{font-size:11.5px;color:var(--text3);margin:0;line-height:1.6}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:14px 0}
+@media(max-width:860px){.two-col{grid-template-columns:1fr}}
+.hl-box{
+  background:linear-gradient(135deg,rgba(26,107,189,.04),rgba(112,64,200,.04));
+  border:1px solid rgba(26,107,189,.14);border-radius:10px;padding:18px 22px;margin:14px 0;
+}
+html[data-theme="dark"] .hl-box{
+  background:linear-gradient(135deg,rgba(77,157,232,.04),rgba(155,127,232,.04));
+  border-color:rgba(77,157,232,.13);
+}
+
+/* ══════════════════════════════════════════
+   FILTERS
+══════════════════════════════════════════ */
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.filter-btn{
+  padding:4px 11px;border-radius:20px;font-size:11.5px;cursor:pointer;
+  border:1px solid var(--border);background:var(--bg3);color:var(--text2);
+  transition:all .15s;user-select:none;
+}
+.filter-btn:hover,.filter-btn.on{
+  border-color:var(--blue);color:var(--blue2);background:rgba(26,107,189,.08);
+}
+html[data-theme="dark"] .filter-btn.on{background:rgba(77,157,232,.08)}
+.search-in{
+  background:var(--bg3);border:1px solid var(--border);border-radius:7px;
+  padding:7px 13px;font-size:12.5px;color:var(--text);
+  font-family:'Inter',sans-serif;outline:none;transition:border-color .15s;min-width:180px;
+}
+.search-in:focus{border-color:var(--blue)}
+.search-in::placeholder{color:var(--text3)}
+
+/* ══════════════════════════════════════════
+   SCENARIO ACCORDION
+══════════════════════════════════════════ */
+.scenario-item{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:11px;overflow:hidden;margin:12px 0;transition:border-color .2s;
+}
+.scenario-item:hover{border-color:var(--border2)}
+.sc-hd{
+  padding:14px 18px;border-bottom:1px solid transparent;
+  transition:border-color .2s;display:flex;align-items:center;
+  justify-content:space-between;cursor:pointer;
+}
+.sc-hd.open{border-bottom-color:var(--border)}
+.scenario-head{display:flex;align-items:center;gap:10px}
+.sc-num{
+  width:26px;height:26px;border-radius:5px;display:flex;align-items:center;
+  justify-content:center;font-size:11px;font-weight:700;
+  font-family:'JetBrains Mono',monospace;flex-shrink:0;
+}
+.sc-hd h4{font-size:13.5px;font-weight:600;color:var(--text)}
+.sc-hd .sc-desc{font-size:11.5px;color:var(--text3);margin-top:2px}
+.sc-body{display:none;padding:16px 18px}
+.sc-body.open{display:block}
+.chevron{font-size:12px;color:var(--text3);transition:transform .2s;user-select:none}
+.chevron.open{transform:rotate(180deg)}
+
+/* ══════════════════════════════════════════
+   LAYER DETAIL
+══════════════════════════════════════════ */
+.layer-desc{
+  background:var(--bg4);border-radius:8px;padding:14px 16px;
+  margin-bottom:14px;border-left:3px solid var(--blue);
+}
+.layer-desc h5{font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px}
+.layer-desc p{font-size:12.5px;margin:0;color:var(--text2)}
+.kv-row{
+  display:flex;gap:12px;padding:6px 0;border-bottom:1px solid var(--border);
+  font-size:12.5px;align-items:baseline;
+}
+.kv-row:last-child{border-bottom:none}
+.kv-key{color:var(--blue2);font-family:'JetBrains Mono',monospace;font-size:12px;min-width:200px;flex-shrink:0}
+.kv-val{color:var(--text2)}
+.kv-def{color:var(--text3);font-size:11px;margin-left:auto;white-space:nowrap}
+.flow-box{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:12px;padding:20px;margin:14px 0;overflow:auto;
+}
+.arch-wrap{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:20px;overflow:auto}
+
+/* ══════════════════════════════════════════
+   GUI MOCKUP
+══════════════════════════════════════════ */
+.mockup-outer{
+  width:100%;overflow-x:auto;border-radius:14px;
+  box-shadow:0 28px 80px var(--shadow2),0 8px 32px var(--shadow);
+  margin:24px 0;
+}
+.gui-win{
+  min-width:860px;background:#e8e4da;border-radius:14px;
+  overflow:hidden;font-family:-apple-system,'Inter',sans-serif;
+  font-size:12px;border:1px solid #ccc8be;
+}
+.gui-titlebar{
+  height:32px;background:linear-gradient(180deg,#ddd8ce,#d0ccbf);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 12px;border-bottom:1px solid #c0bbb0;flex-shrink:0;
+}
+.gui-titlebar-left{display:flex;align-items:center;gap:7px;font-size:11px;color:#5a5450;font-weight:500}
+.gui-titlebar-center{font-size:12px;font-weight:600;color:#2a2520;letter-spacing:.01em}
+.win-ctrl{display:flex;gap:5px}
+.wc{width:12px;height:12px;border-radius:50%;display:inline-block}
+.wc-r{background:#ff5f57;border:1px solid #e0362c}
+.wc-y{background:#ffbd2e;border:1px solid #e0a423}
+.wc-g{background:#28c840;border:1px solid #15a82c}
+.gui-toolbar{
+  height:44px;background:#e0dbd0;border-bottom:1px solid #c8c3b8;
+  display:flex;align-items:center;padding:0 10px;gap:6px;flex-shrink:0;
+}
+.gui-tb-cfg{
+  font-size:11px;color:#4a4640;background:#f0ece4;
+  border:1px solid #c0bbb0;border-radius:4px;padding:3px 8px;
+  font-family:'JetBrains Mono',monospace;margin-right:4px;
+}
+.gui-btn{
+  font-size:10.5px;padding:3px 9px;border-radius:4px;border:1px solid #c0bbb0;
+  background:#ebe7de;color:#3a3530;cursor:pointer;transition:all .12s;white-space:nowrap;
+}
+.gui-btn.active{background:#2a3f3a;color:#d0e8d8;border-color:#2a3f3a}
+.gui-btn.green{background:#d8f0e0;border-color:#88c8a0;color:#1a5a30}
+.gui-sep{width:1px;height:20px;background:#c0bbb0;margin:0 4px}
+.gui-tab{
+  font-size:10.5px;padding:5px 12px;border-radius:5px 5px 0 0;
+  color:#6a6460;cursor:pointer;transition:all .12s;
+  border:1px solid transparent;border-bottom:none;
+}
+.gui-tab.active{background:#f0ebe0;color:#2a2520;border-color:#c8c3b8;border-bottom-color:#f0ebe0}
+.gui-tb-right{margin-left:auto;display:flex;align-items:center;gap:4px}
+.gui-ico{
+  width:26px;height:26px;border-radius:4px;display:inline-flex;
+  align-items:center;justify-content:center;font-size:13px;
+  color:#6a6460;cursor:pointer;transition:background .12s;
+}
+.gui-ico:hover{background:#d8d4ca}
+.gui-body{display:flex;height:580px;overflow:hidden}
+.gui-rail{
+  width:34px;background:#d5d0c6;border-right:1px solid #c0bbb0;
+  display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:6px;flex-shrink:0;
+}
+.gui-proj-ic{
+  width:24px;height:24px;border-radius:6px;display:flex;align-items:center;
+  justify-content:center;font-size:10px;font-weight:700;color:#fff;
+  cursor:pointer;flex-shrink:0;transition:transform .12s;
+}
+.gui-proj-ic:hover{transform:scale(1.1)}
+.gui-proj-ic.active{box-shadow:0 0 0 2px #f0ebe0,0 0 0 3.5px rgba(0,0,0,.25)}
+.gui-sidebar{
+  width:220px;background:#e2ddd2;border-right:1px solid #c8c3b8;
+  display:flex;flex-direction:column;flex-shrink:0;overflow:hidden;
+}
+.gui-sb-proj{padding:10px 12px;border-bottom:1px solid #c8c3b8;font-size:11px}
+.gui-sb-proj-name{
+  font-weight:600;color:#2a2520;font-size:12px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.gui-sb-proj-path{font-size:9.5px;color:#8a8480;margin-top:2px;word-break:break-all}
+.gui-sb-proj-icons{display:flex;gap:5px;margin-top:6px}
+.gui-sb-icon{font-size:12px;color:#7a7470;cursor:pointer;padding:2px 4px;border-radius:3px;transition:background .12s}
+.gui-sb-icon:hover{background:#d0ccc0}
+.gui-new-conv{
+  margin:8px 10px;padding:6px 0;background:#f0ebe0;border:1px solid #c0bbb0;
+  border-radius:5px;text-align:center;font-size:11px;color:#4a4640;cursor:pointer;
+  transition:all .12s;display:flex;align-items:center;justify-content:center;gap:5px;
+}
+.gui-new-conv:hover{background:#e8e4d8;border-color:#a8a49a}
+.gui-conv-list{flex:1;overflow-y:auto;padding:4px 0}
+.gui-conv-item{padding:7px 10px;cursor:pointer;border-left:2px solid transparent;transition:all .1s}
+.gui-conv-item.active{background:#d8d4c8;border-left-color:#2a3f3a}
+.gui-conv-item:hover:not(.active){background:rgba(0,0,0,.04)}
+.gui-conv-title{font-size:11px;font-weight:500;color:#2a2520;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gui-conv-meta{font-size:9.5px;color:#8a8480;margin-top:1px}
+.gui-running-toggle{
+  padding:6px 10px;border-top:1px solid #c8c3b8;
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:10px;color:#8a8480;
+}
+.gui-mini-toggle{width:28px;height:15px;border-radius:8px;background:#c8c4bc;position:relative;cursor:pointer}
+.gui-mini-knob{
+  position:absolute;top:2px;left:2px;width:11px;height:11px;
+  border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2);
+}
+.gui-chat{flex:1;display:flex;flex-direction:column;background:#f0ebe0;overflow:hidden}
+.gui-chat-scroll{flex:1;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;gap:12px}
+.gui-msg-sys{font-size:10px;color:#8a8480;text-align:left;padding:2px 0;display:flex;align-items:center;gap:5px}
+.gui-msg-agent{
+  background:#fff;border:1px solid #ddd9d0;border-radius:10px;
+  padding:12px 14px;max-width:82%;align-self:flex-start;box-shadow:0 1px 4px rgba(0,0,0,.06);
+}
+.gui-msg-agent-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.gui-agent-tag{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:600;color:#4a4640}
+.gui-agent-model{font-size:9px;color:#a0a09a;font-weight:400}
+.gui-msg-icons{display:flex;gap:4px}
+.gui-msg-ic{font-size:11px;color:#b0b0a8;cursor:pointer;padding:2px}
+.gui-msg-text{font-size:12px;color:#2a2520;line-height:1.7}
+.gui-msg-user{
+  background:#2a3f3a;border-radius:10px 10px 2px 10px;
+  padding:10px 14px;max-width:60%;align-self:flex-end;box-shadow:0 2px 8px rgba(42,63,58,.25);
+}
+.gui-msg-user-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+.gui-user-tag{font-size:9.5px;color:#6a9a88;font-weight:600;display:flex;align-items:center;gap:4px}
+.gui-msg-user-text{font-size:12.5px;color:#d0e8dc;line-height:1.6}
+.gui-think{
+  background:#f8f5ee;border:1px solid #ddd9d0;border-radius:8px;
+  padding:8px 12px;max-width:82%;align-self:flex-start;
+  display:flex;align-items:center;justify-content:space-between;cursor:pointer;
+}
+.gui-think-l{display:flex;align-items:center;gap:5px;font-size:11px;color:#6a6460}
+.gui-think-arr{font-size:10px;color:#a0a09a}
+.gui-list-item{font-size:11.5px;color:#3a3530;line-height:1.7;display:flex;align-items:baseline;gap:5px}
+.gui-input-bar{
+  border-top:1px solid #d0ccc0;background:#ece8de;
+  padding:8px 12px;display:flex;align-items:center;gap:8px;flex-shrink:0;
+}
+.gui-input{
+  flex:1;background:#fff;border:1px solid #c8c4ba;border-radius:6px;
+  padding:8px 12px;font-size:11px;color:#5a5450;font-family:'Inter',sans-serif;
+}
+.gui-send-btn{
+  background:#2a3f3a;color:#d0e8dc;border:none;border-radius:6px;
+  padding:8px 16px;font-size:11.5px;cursor:pointer;
+  display:flex;align-items:center;gap:5px;white-space:nowrap;font-weight:500;
+}
+.gui-status{
+  height:22px;background:#d8d4ca;border-top:1px solid #c0bbb0;
+  display:flex;align-items:center;padding:0 12px;font-size:9.5px;color:#6a6460;gap:5px;
+}
+.gui-status-dot{width:7px;height:7px;border-radius:50%;background:#c04040;flex-shrink:0}
+
+/* ══════════════════════════════════════════
+   BOT 工作台 MOCKUP
+══════════════════════════════════════════ */
+.gui-bots-wrap{display:flex;flex:1;overflow:hidden}
+.gui-bot-list{
+  width:216px;background:#e2ddd2;border-right:1px solid #c8c3b8;
+  display:flex;flex-direction:column;flex-shrink:0;
+}
+.gui-bot-list-hd{
+  padding:9px 10px 8px;border-bottom:1px solid #c8c3b8;
+  display:flex;align-items:center;gap:6px;
+}
+.gui-bot-list-hd-title{
+  font-size:13px;font-weight:700;color:#2a2520;flex:1;
+  display:flex;align-items:center;gap:5px;
+}
+.gui-bot-list-hd-help{
+  width:16px;height:16px;border-radius:50%;
+  background:#c8c4bc;display:inline-flex;align-items:center;
+  justify-content:center;font-size:9px;color:#6a6460;cursor:pointer;
+}
+.gui-bot-list-edit-btn{
+  font-size:10.5px;padding:2px 8px;border:1px solid #c0bbb0;
+  background:#ebe7de;border-radius:3px;color:#3a3530;cursor:pointer;
+}
+.gui-bot-scroll{flex:1;overflow-y:auto;padding:6px 5px}
+.gui-bot-card{
+  background:#ece8de;border:1px solid #d0ccbf;border-radius:7px;
+  padding:10px 11px;margin-bottom:5px;cursor:pointer;transition:all .12s;
+}
+.gui-bot-card:hover:not(.bact){background:#e8e4d8;border-color:#b8b4a8}
+.gui-bot-card.bact{
+  background:#ede8f8;border:1.5px solid #9b7fe8;
+  box-shadow:0 1px 6px rgba(155,127,232,.20);
+}
+.gui-bot-card-name{font-size:12.5px;font-weight:600;color:#2a2520;margin-bottom:3px}
+.gui-bot-card.bact .gui-bot-card-name{color:#5a20b8}
+.gui-bot-card-desc{font-size:10.5px;color:#7a7470;line-height:1.5;margin-bottom:5px}
+.gui-bot-card-tag{font-size:9.5px;color:#a8a4a0;font-family:'JetBrains Mono',monospace}
+/* detail panel */
+.gui-bot-detail-area{
+  flex:1;background:#f0ebe0;display:flex;flex-direction:column;overflow:hidden;
+}
+.gui-bot-detail-hd{
+  padding:14px 20px 12px;border-bottom:1px solid #d8d4ca;
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:16px;flex-shrink:0;
+}
+.gui-bot-detail-info{flex:1}
+.gui-bot-detail-name{font-size:17px;font-weight:700;color:#2a2520;margin-bottom:3px}
+.gui-bot-detail-path{
+  font-size:10.5px;color:#a0a09a;font-family:'JetBrains Mono',monospace;margin-bottom:5px;
+}
+.gui-bot-detail-desc-text{font-size:12px;color:#4a4640;margin-bottom:3px;line-height:1.6}
+.gui-bot-detail-mode{font-size:10.5px;color:#8a8480}
+.gui-bot-detail-btns{display:flex;gap:6px;align-items:center;flex-shrink:0;padding-top:2px}
+.gui-dbtn{
+  padding:5px 11px;border-radius:5px;font-size:11.5px;cursor:pointer;
+  border:1px solid;display:flex;align-items:center;gap:4px;
+  font-weight:500;white-space:nowrap;
+}
+.gui-dbtn-use{background:linear-gradient(135deg,#6030b8,#7848d0);color:#fff;border-color:#5020a0}
+.gui-dbtn-edit{background:#ebe7de;color:#3a3530;border-color:#c0bbb0}
+.gui-dbtn-del{background:#ebe7de;color:#b83030;border-color:#d0a0a0}
+/* task config */
+.gui-bot-task-cfg{
+  padding:13px 20px 12px;border-bottom:1px solid #d8d4ca;flex-shrink:0;
+}
+.gui-bot-task-cfg-title{
+  font-size:12.5px;font-weight:600;color:#3a3530;margin-bottom:8px;
+}
+.gui-bot-task-input{
+  width:100%;background:#fff;border:1px solid #c8c4ba;border-radius:6px;
+  padding:10px 12px;font-size:11.5px;color:#a0a09a;
+  font-family:'Inter',sans-serif;resize:none;height:70px;
+  outline:none;box-sizing:border-box;
+}
+.gui-bot-task-footer{display:flex;justify-content:flex-end;margin-top:8px}
+.gui-bot-start{
+  background:linear-gradient(135deg,#5820a8,#7040c8);color:#fff;
+  border:none;border-radius:6px;padding:8px 22px;font-size:12px;
+  cursor:pointer;display:flex;align-items:center;gap:5px;font-weight:600;
+  box-shadow:0 2px 8px rgba(88,32,168,.28);
+}
+/* task list */
+.gui-bot-task-list{flex:1;padding:13px 20px;overflow-y:auto}
+.gui-bot-task-list-title{font-size:12px;font-weight:600;color:#3a3530;margin-bottom:5px}
+.gui-bot-task-list-empty{font-size:11.5px;color:#a0a09a;margin-top:2px}
+/* new-bot btn at list bottom */
+.gui-bot-list-add{
+  margin:0 5px 8px;padding:7px 0;background:#ebe7de;border:1px dashed #c0bbb0;
+  border-radius:5px;text-align:center;font-size:11px;color:#7a7470;cursor:pointer;
+  transition:all .12s;
+}
+.gui-bot-list-add:hover{border-color:#9b7fe8;color:#7040c8;background:#f0ecfc}
+/* ══════════════════════════════════════════════════════
+   BOT & 编排  文档区  —  与全局主题变量对齐
+══════════════════════════════════════════════════════ */
+
+/* ── 区块基底：嵌入标准 section，不再套一层独立底色盒 ── */
+.doc-section{background:transparent;border:none;border-radius:0;padding:0;margin:0}
+.doc-section-title{
+  font-size:22px;font-weight:800;color:var(--text);
+  display:flex;align-items:center;gap:10px;margin-bottom:6px;
+}
+.doc-section-title .ds-badge{
+  font-size:11px;padding:3px 10px;border-radius:20px;
+  background:linear-gradient(135deg,var(--purple),#9b6ee8);
+  color:#fff;font-weight:600;letter-spacing:.5px;
+}
+.doc-section-lead{
+  font-size:13.5px;color:var(--text2);line-height:1.8;
+  margin-bottom:28px;border-left:3px solid var(--purple);
+  padding-left:14px;
+}
+
+/* ── 分隔线标题 ── */
+.doc-h2{
+  font-size:16px;font-weight:700;color:var(--text);
+  margin:32px 0 14px;display:flex;align-items:center;gap:8px;
+}
+.doc-h2::after{
+  content:'';flex:1;height:1px;background:linear-gradient(to right,var(--border2),transparent);
+}
+.doc-h3{
+  font-size:13.5px;font-weight:700;color:var(--text);
+  margin:20px 0 8px;display:flex;align-items:center;gap:6px;
+}
+
+/* ── 概览卡片行 ── */
+.doc-card-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}
+.doc-card{
+  background:var(--bg3);border:1px solid var(--border);border-radius:10px;
+  padding:18px 16px;transition:box-shadow .15s,transform .15s,border-color .15s;
+}
+.doc-card:hover{border-color:var(--border2);box-shadow:0 4px 16px var(--shadow);transform:translateY(-2px)}
+.doc-card-icon{font-size:26px;margin-bottom:8px}
+.doc-card-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px}
+.doc-card-desc{font-size:11.5px;color:var(--text3);line-height:1.6}
+.doc-card-tag{
+  display:inline-block;margin-top:8px;font-size:10px;
+  padding:2px 8px;border-radius:4px;
+  background:rgba(112,64,200,.10);color:var(--purple);font-family:'JetBrains Mono',monospace;
+}
+
+/* ── Bot 预置列表大卡 ── */
+.bot-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:14px 0 24px}
+.bot-item{
+  background:var(--bg3);border:1px solid var(--border);border-radius:9px;
+  padding:14px 16px;display:flex;gap:12px;align-items:flex-start;
+  transition:border-color .15s,box-shadow .15s;
+}
+.bot-item:hover{border-color:var(--purple);box-shadow:0 2px 10px var(--shadow)}
+.bot-item-num{
+  width:26px;height:26px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--purple),#9b6ee8);
+  color:#fff;font-size:11px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+}
+.bot-item-body{flex:1}
+.bot-item-name{font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:3px}
+.bot-item-desc{font-size:11px;color:var(--text3);line-height:1.55;margin-bottom:5px}
+.bot-item-meta{display:flex;gap:6px;flex-wrap:wrap}
+.bot-item-tag{
+  font-size:9.5px;padding:1px 7px;border-radius:3px;
+  background:rgba(112,64,200,.10);color:var(--purple);font-family:monospace;
+}
+.bot-item-scene{
+  font-size:9.5px;padding:1px 7px;border-radius:3px;
+  background:rgba(26,138,94,.10);color:var(--green);
+}
+
+/* ── 步骤流程 ── */
+.step-flow{display:flex;flex-direction:column;gap:0;margin:14px 0 24px}
+.step-row{display:flex;gap:0;align-items:stretch}
+.step-num-col{
+  display:flex;flex-direction:column;align-items:center;
+  width:40px;flex-shrink:0;
+}
+.step-circle{
+  width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,var(--purple),#8858d8);
+  color:#fff;font-size:12px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.step-line{width:2px;flex:1;background:linear-gradient(to bottom,var(--purple),var(--border));min-height:12px}
+.step-body{
+  background:var(--bg3);border:1px solid var(--border);border-radius:9px;
+  padding:12px 16px;margin-bottom:10px;flex:1;margin-left:10px;
+}
+.step-body-title{font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:4px}
+.step-body-text{font-size:11.5px;color:var(--text2);line-height:1.65}
+.step-body-tip{
+  margin-top:7px;padding:6px 10px;background:rgba(112,64,200,.06);
+  border-left:3px solid var(--purple);border-radius:4px;
+  font-size:11px;color:var(--text2);
+}
+.step-last .step-line{display:none}
+
+/* ── 编排流水线图 ── */
+.orch-pipeline{
+  display:flex;align-items:center;gap:0;
+  background:var(--bg3);border:1px solid var(--border);border-radius:12px;
+  padding:20px 24px;margin:14px 0 24px;overflow-x:auto;
+}
+.orch-node{
+  background:rgba(112,64,200,.08);border:1.5px solid rgba(112,64,200,.35);border-radius:9px;
+  padding:12px 14px;min-width:100px;text-align:center;flex-shrink:0;
+  transition:all .15s;
+}
+.orch-node:hover{border-color:var(--purple);box-shadow:0 2px 8px var(--shadow)}
+.orch-node-icon{font-size:20px;margin-bottom:4px}
+.orch-node-name{font-size:11px;font-weight:700;color:var(--text)}
+.orch-node-type{font-size:9.5px;color:var(--purple);margin-top:2px}
+.orch-arrow{
+  flex-shrink:0;padding:0 6px;font-size:18px;color:var(--purple);
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+}
+.orch-arrow-label{font-size:9px;color:var(--text3);white-space:nowrap}
+.orch-node-trigger{
+  border-color:var(--green);background:rgba(26,138,94,.08);
+}
+.orch-node-trigger .orch-node-type{color:var(--green)}
+.orch-node-output{
+  border-color:var(--orange);background:rgba(200,98,10,.08);
+}
+.orch-node-output .orch-node-type{color:var(--orange)}
+
+/* ── 配置参数表 ── */
+.doc-table{width:100%;border-collapse:collapse;font-size:12px;margin:10px 0 24px}
+.doc-table th{
+  background:var(--bg3);
+  color:var(--text3);font-weight:700;text-align:left;
+  padding:9px 14px;border:1px solid var(--border);
+  font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;
+}
+.doc-table td{
+  padding:9px 14px;border:1px solid var(--border);color:var(--text2);
+  vertical-align:top;line-height:1.6;
+}
+.doc-table tr:nth-child(even) td{background:rgba(128,128,128,.03)}
+.doc-table tr:hover td{background:rgba(128,128,128,.05)}
+.doc-table code{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  background:var(--bg3);color:var(--purple);padding:1px 5px;border-radius:3px;
+}
+
+/* ── 提示块 ── */
+.doc-tip{
+  display:flex;gap:10px;padding:12px 16px;border-radius:8px;
+  margin:10px 0;font-size:12px;line-height:1.7;color:var(--text);
+}
+.doc-tip-info{background:rgba(26,107,189,.07);border-left:3px solid var(--blue)}
+.doc-tip-warn{background:rgba(200,98,10,.07);border-left:3px solid var(--orange)}
+.doc-tip-success{background:rgba(26,138,94,.07);border-left:3px solid var(--green)}
+.doc-tip-purple{background:rgba(112,64,200,.07);border-left:3px solid var(--purple)}
+.doc-tip-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+
+/* ── 代码块（始终深色，与全局 .code-block 一致） ── */
+.doc-code{
+  background:var(--code-bg);color:#c8b8f8;font-family:'JetBrains Mono',monospace;
+  font-size:11.5px;padding:16px 20px;border-radius:9px;
+  border:1px solid var(--code-bdr);
+  line-height:1.8;margin:10px 0 20px;overflow-x:auto;
+}
+.doc-code .kw{color:#c084fc}
+.doc-code .st{color:#86efac}
+.doc-code .cm{color:#6b7280;font-style:italic}
+.doc-code .nm{color:#fbbf24}
+.doc-code .op{color:#f472b6}
+
+/* ── 标签徽章（限定在 Bot 章节，避免覆盖全局 .badge） ── */
+.doc-section .badge{
+  display:inline-flex;align-items:center;gap:3px;
+  font-size:10px;padding:2px 8px;border-radius:12px;font-weight:600;
+}
+.badge-purple{background:rgba(112,64,200,.10);color:var(--purple);border:1px solid rgba(112,64,200,.25)}
+.badge-green{background:rgba(26,138,94,.10);color:var(--green);border:1px solid rgba(26,138,94,.25)}
+.badge-orange{background:rgba(200,98,10,.10);color:var(--orange);border:1px solid rgba(200,98,10,.25)}
+.badge-blue{background:rgba(26,107,189,.10);color:var(--blue2);border:1px solid rgba(26,107,189,.25)}
+
+/* ── 双栏布局 ── */
+.doc-two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.doc-two-col-3-7{display:grid;grid-template-columns:3fr 7fr;gap:16px;margin-bottom:20px}
+
+/* ── 特性高亮行 ── */
+.feat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0 24px}
+.feat-item{
+  background:var(--bg3);border:1px solid var(--border);border-radius:8px;
+  padding:14px 12px;text-align:center;
+}
+.feat-item-icon{font-size:22px;margin-bottom:6px}
+.feat-item-title{font-size:11.5px;font-weight:700;color:var(--text);margin-bottom:3px}
+.feat-item-desc{font-size:10.5px;color:var(--text3);line-height:1.5}
+
+/* ── FAQ 折叠式 ── */
+.faq-item{
+  border:1px solid var(--border);border-radius:8px;margin-bottom:8px;
+  overflow:hidden;background:var(--bg3);
+}
+.faq-q{
+  padding:12px 16px;font-size:12.5px;font-weight:600;
+  color:var(--text);display:flex;align-items:center;gap:8px;
+  cursor:default;
+}
+.faq-q::before{
+  content:'Q';width:20px;height:20px;border-radius:50%;
+  background:linear-gradient(135deg,var(--purple),#9b6ee8);
+  color:#fff;font-size:10px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.faq-a{
+  padding:0 16px 12px 44px;font-size:12px;
+  color:var(--text2);line-height:1.7;
+}
+
+/* ── 响应式 ── */
+@media(max-width:860px){
+  .doc-card-row{grid-template-columns:1fr 1fr}
+  .bot-grid{grid-template-columns:1fr}
+  .feat-row{grid-template-columns:repeat(2,1fr)}
+  .doc-two-col,.doc-two-col-3-7{grid-template-columns:1fr}
+  .orch-pipeline{flex-direction:column;align-items:flex-start}
+}
+@media(max-width:560px){
+  .doc-section{padding:24px 18px}
+  .doc-card-row{grid-template-columns:1fr}
+  .feat-row{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progress"></div>
+
+<!-- ═══════════════ SIDEBAR ═══════════════ -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <h2><span class="logo-hex">⬡</span> OMA Core</h2>
+    <div class="ver">v1.1.1 &nbsp;·&nbsp; 2026-09-09</div>
+  </div>
+  <div class="sidebar-nav">
+    <div class="nav-cat">文档导航</div>
+    <div class="nav-item active" data-target="sec-hero"><span class="ni">🏠</span>系统概览</div>
+    <div class="nav-item" data-target="sec-arch"><span class="ni">🏗</span>整体架构</div>
+    <div class="nav-item" data-target="sec-layers"><span class="ni">📦</span>层级详解</div>
+    <div class="nav-item" data-target="sec-tools"><span class="ni">🔧</span>工具参考（27种）</div>
+    <div class="nav-item" data-target="sec-config"><span class="ni">⚙️</span>配置参考</div>
+    <div class="nav-item" data-target="sec-quickstart"><span class="ni">⚡</span>快速上手</div>
+    <div class="nav-item" data-target="sec-scenarios"><span class="ni">💡</span>使用场景详例</div>
+    <div class="nav-item" data-target="sec-team"><span class="ni">👥</span>团队协作</div>
+    <div class="nav-item" data-target="sec-apps"><span class="ni">🔌</span>App 连接器</div>
+    <div class="nav-item" data-target="sec-bots"><span class="ni">🤖</span>Bot &amp; 编排</div>
+    <div class="nav-item" data-target="sec-gui"><span class="ni">🖥</span>GUI 桌面端</div>
+  </div>
+  <div class="theme-toggle-wrap">
+    <button class="theme-toggle-btn" id="themeToggleBtn">
+      <span class="theme-icon" id="themeIcon">☀️</span>
+      <span class="theme-label" id="themeLabel">亮色模式</span>
+      <div class="toggle-track"><div class="toggle-knob"></div></div>
+    </button>
+  </div>
+</nav>
+
+<main class="main">
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="hero" id="sec-hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div style="position:relative;z-index:1">
+    <div class="hero-badge"><span class="badge-dot"></span>OMA Core 1.1.1 &nbsp;·&nbsp; 数字员工编制</div>
+    <h1>Open Multi-Agent Core<br>完整技术文档</h1>
+    <p class="hero-sub">紧凑型本地多智能体运行时 · 纯 Python · OpenAI 兼容。ReAct + Board + Lease + Swarm。一人公司数字员工：一份花名册、产物落在 <code style="font-family:'JetBrains Mono',monospace;font-size:12px">swarm/&lt;岗&gt;/</code>、Playbook 只写入看板。支持内容流水线、日更调研、快慢模型分流与 GUI 配置窗。不依赖 LangChain，可在离线/内网运行。</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="n">9</div><div class="l">架构层级</div></div>
+      <div class="stat"><div class="n">27+</div><div class="l">内置工具</div></div>
+      <div class="stat"><div class="n">13</div><div class="l">公司流水线</div></div>
+      <div class="stat"><div class="n">1</div><div class="l">份花名册</div></div>
+      <div class="stat"><div class="n">4</div><div class="l">默认并发槽</div></div>
+      <div class="stat"><div class="n">11</div><div class="l">皮肤主题</div></div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px">
+      <span class="badge b-green">✓ 零配置起跑</span>
+      <span class="badge b-blue">✓ 本地/云端 LLM</span>
+      <span class="badge b-purple">✓ ReAct 循环</span>
+      <span class="badge b-orange">✓ 多 Bot 团队并发</span>
+      <span class="badge b-teal">✓ 可观测追踪</span>
+      <span class="badge b-gray">✓ Playbook→Board</span>
+      <span class="badge b-green">✓ 产物契约</span>
+      <span class="badge b-red">✓ 安全沙箱</span>
+    </div>
+
+    <!-- ★ 核心特点与优势 ★ -->
+    <h3 class="stitle" style="margin-top:0;padding-left:0">核心特点与优势</h3>
+    <div class="feat-grid">
+
+      <div class="feat-card">
+        <div class="feat-icon">👥</div>
+        <span class="feat-accent" style="background:linear-gradient(90deg,var(--orange),var(--yellow))"></span>
+        <h4>Orchestrator + Worker 团队协作</h4>
+        <p>根角色规划与派发，Worker 按租约并行。Board 是唯一协作面。Playbook 只生成看板项，不另起流水线引擎。</p>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-icon">⚡</div>
+        <span class="feat-accent" style="background:linear-gradient(90deg,var(--blue),var(--cyan))"></span>
+        <h4>多 Bot 真并发执行</h4>
+        <p>通过 <code style="font-family:'JetBrains Mono',monospace;font-size:11px;background:var(--bg4);padding:1px 4px;border-radius:3px">max_concurrent_bots</code> 控制并发槽位，所有子 Bot 运行在独立线程，互不阻塞，collect 模式让 root 在等待时继续推进其他工作。</p>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-icon">🧩</div>
+        <span class="feat-accent" style="background:linear-gradient(90deg,var(--purple),var(--blue))"></span>
+        <h4>流程自由定制</h4>
+        <p>通过 Agent MD 文件定义角色、工具权限、模型选择；通过 Skill MD 注入专业知识；通过 App YAML 连接任意 REST API——无需修改一行 Python 代码。</p>
+      </div>
+
+      <!-- ★ 新增：App 连接器 ★ -->
+      <div class="feat-card">
+        <div class="feat-icon">🔌</div>
+        <span class="feat-accent" style="background:linear-gradient(90deg,var(--purple),var(--orange))"></span>
+        <h4>App 连接器 · 零代码对接 API</h4>
+        <p>用一份 YAML 声明将任意 HTTP REST API 变为 OMA 工具，内置 Bearer / Header / Basic / 无鉴权四种认证方式，支持路径参数与请求体，Agent 可自主发现并调用所有已注册 App。</p>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-icon">🐝</div>
+        <span class="feat-accent" style="background:linear-gradient(90deg,var(--teal),var(--green))"></span>
+        <h4>Swarm 自动专家派发</h4>
+        <p>基于关键词启发式自动识别任务类型，动态选取最匹配的专家 Bot 组合，并行分配互不冲突的写 Lease，一键开启无需手写派发逻辑。</p>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-icon">📋</div>
+        <span class="feat-accent" style="background:linear-gradient(90deg,var(--green),var(--teal))"></span>
+        <h4>Board 看板任务追踪</h4>
+        <p>Kanban 式状态机（ready → running → done/blocked/failed）是团队协作的唯一真值，支持评论、转交、阻塞标记，实时可观测整个多 Bot 执行过程。</p>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-icon">🔒</div>
+        <span class="feat-accent" style="background:linear-gradient(90deg,var(--red),var(--orange))"></span>
+        <h4>写 Lease 文件隔离</h4>
+        <p>基于 glob 模式的文件独占锁机制，不同 Worker 的写权限严格隔离，orchestrator 完全禁止写文件，从根本上防止多 Bot 并发时的文件冲突。</p>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-icon">💬</div>
+        <span class="feat-accent" style="background:linear-gradient(90deg,var(--cyan),var(--blue))"></span>
+        <h4>中断与审批工作流</h4>
+        <p>ask_user（提问）与 approval（审批）两种中断类型，支持超时策略、会话级缓存、批量审批。既能全自动执行，也能在关键节点插入人工决策。</p>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-icon">📊</div>
+        <span class="feat-accent" style="background:linear-gradient(90deg,var(--purple),var(--red))"></span>
+        <h4>上下文智能压缩</h4>
+        <p>三档水位自动触发（70% / 85% / 95%），滑动窗口 + 摘要折叠 + 截断超限工具输出，保证长任务在任意 context 长度的模型上稳定运行不崩溃。</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ ARCHITECTURE ═══════════════ -->
+<section class="section" id="sec-arch">
+  <div class="sec-hd"><div class="sec-num">1</div><h2 class="sec-title">整体架构</h2></div>
+  <p class="sec-sub">系统分为 9 个垂直层次，各层职责单一，依赖方向自顶向下。GUI 层与业务逻辑完全解耦，Runtime 是核心执行引擎。</p>
+
+  <div class="arch-wrap">
+    <!--
+      ★ 修复：所有正文文字（原来硬编码的暗色系颜色）
+         改为 style="fill:var(--svg-xxx)" 跟随明暗主题
+         只保留高饱和度的"强调色"（如 #9b7fe8 / #4d9de8 等）硬编码不变
+    -->
+    <svg viewBox="0 0 680 490" style="width:100%;min-width:500px;display:block">
+      <defs>
+        <linearGradient id="gGUI" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#7b3fe4"/>
+          <stop offset="100%" stop-color="#4d9de8"/>
+        </linearGradient>
+        <linearGradient id="gAdapter" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#4d9de8"/>
+          <stop offset="100%" stop-color="#38bdf8"/>
+        </linearGradient>
+        <linearGradient id="gSwarm" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#2dd4bf"/>
+          <stop offset="100%" stop-color="#3ecf8e"/>
+        </linearGradient>
+        <linearGradient id="gRuntime" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#f5923c"/>
+          <stop offset="100%" stop-color="#f0c040"/>
+        </linearGradient>
+        <linearGradient id="gTools" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#e55f5f"/>
+          <stop offset="100%" stop-color="#f5923c"/>
+        </linearGradient>
+        <linearGradient id="gContext" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#9b7fe8"/>
+          <stop offset="100%" stop-color="#7b3fe4"/>
+        </linearGradient>
+        <linearGradient id="gLLM" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#38bdf8"/>
+          <stop offset="100%" stop-color="#4d9de8"/>
+        </linearGradient>
+        <linearGradient id="gCat" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#3ecf8e"/>
+          <stop offset="100%" stop-color="#2dd4bf"/>
+        </linearGradient>
+        <linearGradient id="gBot" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#4a6280"/>
+          <stop offset="100%" stop-color="#5c7a9e"/>
+        </linearGradient>
+        <filter id="shadow2">
+          <feDropShadow dx="0" dy="2" stdDeviation="4" flood-opacity=".15"/>
+        </filter>
+      </defs>
+
+      <!-- connector lines -->
+      <line x1="340" y1="56" x2="340" y2="72" stroke="#6080a0" stroke-width="1.5" stroke-dasharray="3,3"/>
+      <line x1="340" y1="106" x2="340" y2="122" stroke="#6080a0" stroke-width="1.5" stroke-dasharray="3,3"/>
+      <line x1="340" y1="156" x2="340" y2="172" stroke="#6080a0" stroke-width="1.5" stroke-dasharray="3,3"/>
+      <line x1="340" y1="214" x2="340" y2="230" stroke="#6080a0" stroke-width="1.5" stroke-dasharray="3,3"/>
+      <line x1="340" y1="298" x2="340" y2="314" stroke="#6080a0" stroke-width="1.5" stroke-dasharray="3,3"/>
+      <line x1="340" y1="348" x2="340" y2="364" stroke="#6080a0" stroke-width="1.5" stroke-dasharray="3,3"/>
+      <line x1="340" y1="408" x2="340" y2="424" stroke="#6080a0" stroke-width="1.5" stroke-dasharray="3,3"/>
+
+      <!-- GUI LAYER -->
+      <rect x="20" y="12" width="640" height="44" rx="9" fill="url(#gGUI)" opacity=".12" filter="url(#shadow2)"/>
+      <rect x="20" y="12" width="640" height="44" rx="9" fill="none" stroke="url(#gGUI)" stroke-width="1.5"/>
+      <text x="36" y="30" font-family="JetBrains Mono,monospace" font-size="11" fill="#9b7fe8" font-weight="700">GUI LAYER</text>
+      <text x="36" y="47" font-family="Inter,sans-serif" font-size="12" font-weight="600" style="fill:var(--svg-main)">oma4_bot_gui.py</text>
+      <text x="430" y="39" font-family="Inter,sans-serif" font-size="11" style="fill:var(--svg-dim)">NiceGUI · 多对话 · Bot工作台 · 皮肤系统</text>
+
+      <!-- ADAPTER -->
+      <rect x="20" y="72" width="640" height="34" rx="8" fill="url(#gAdapter)" opacity=".08"/>
+      <rect x="20" y="72" width="640" height="34" rx="8" fill="none" stroke="url(#gAdapter)" stroke-width="1.2"/>
+      <text x="36" y="85" font-family="JetBrains Mono,monospace" font-size="10" fill="#4d9de8" font-weight="700">ADAPTER</text>
+      <text x="36" y="99" font-family="Inter,sans-serif" font-size="12" font-weight="500" style="fill:var(--svg-main)">oma/gui_agent.py · LightweightOpenCodeAgent</text>
+      <text x="490" y="93" font-family="Inter,sans-serif" font-size="11" style="fill:var(--svg-dim)">GUI↔Runtime 桥接层</text>
+
+      <!-- SWARM -->
+      <rect x="20" y="122" width="640" height="34" rx="8" fill="url(#gSwarm)" opacity=".08"/>
+      <rect x="20" y="122" width="640" height="34" rx="8" fill="none" stroke="url(#gSwarm)" stroke-width="1.2"/>
+      <text x="36" y="135" font-family="JetBrains Mono,monospace" font-size="10" fill="#2dd4bf" font-weight="700">SWARM</text>
+      <text x="36" y="149" font-family="Inter,sans-serif" font-size="12" font-weight="500" style="fill:var(--svg-main)">oma/swarm.py · 关键词启发式专家派发</text>
+      <text x="490" y="143" font-family="Inter,sans-serif" font-size="11" style="fill:var(--svg-dim)">pick_specialists · boot_swarm</text>
+
+      <!-- RUNTIME CORE -->
+      <rect x="20" y="172" width="640" height="58" rx="9" fill="url(#gRuntime)" opacity=".10" filter="url(#shadow2)"/>
+      <rect x="20" y="172" width="640" height="58" rx="9" fill="none" stroke="url(#gRuntime)" stroke-width="2"/>
+      <text x="36" y="190" font-family="JetBrains Mono,monospace" font-size="10" fill="#f5923c" font-weight="700">▸ RUNTIME CORE</text>
+      <text x="36" y="208" font-family="Inter,sans-serif" font-size="13" font-weight="700" style="fill:var(--svg-main)">oma/runtime.py</text>
+      <text x="36" y="223" font-family="Inter,sans-serif" font-size="11" style="fill:var(--svg-sub)">ReAct循环 · Bot状态机 · Board · Lease · Spawn/Collect · Interrupt</text>
+      <!-- EXECUTION ENGINE badge -->
+      <rect x="540" y="181" width="108" height="40" rx="6" fill="rgba(245,146,60,.18)" stroke="rgba(245,146,60,.4)" stroke-width="1"/>
+      <text x="594" y="198" font-family="JetBrains Mono,monospace" font-size="9" fill="#f5923c" text-anchor="middle" font-weight="700">EXECUTION</text>
+      <text x="594" y="212" font-family="JetBrains Mono,monospace" font-size="9" fill="#f0c040" text-anchor="middle" font-weight="700">ENGINE</text>
+
+      <!-- TOOLS -->
+      <rect x="20" y="230" width="205" height="68" rx="8" fill="url(#gTools)" opacity=".08"/>
+      <rect x="20" y="230" width="205" height="68" rx="8" fill="none" stroke="url(#gTools)" stroke-width="1.3"/>
+      <text x="35" y="247" font-family="JetBrains Mono,monospace" font-size="9.5" fill="#e55f5f" font-weight="700">TOOLS</text>
+      <text x="35" y="263" font-family="Inter,sans-serif" font-size="12" font-weight="600" style="fill:var(--svg-main)">tools.py</text>
+      <text x="35" y="277" font-family="Inter,sans-serif" font-size="11" style="fill:var(--svg-sub)">27种内置工具</text>
+      <text x="35" y="291" font-family="Inter,sans-serif" font-size="10.5" style="fill:var(--svg-dim)">文件·bash·skill·team·web</text>
+
+      <!-- APP CONNECTOR -->
+      <rect x="237" y="230" width="206" height="68" rx="8" fill="rgba(155,127,232,.07)"/>
+      <rect x="237" y="230" width="206" height="68" rx="8" fill="none" stroke="rgba(155,127,232,.5)" stroke-width="1.3"/>
+      <text x="252" y="247" font-family="JetBrains Mono,monospace" font-size="9.5" fill="#9b7fe8" font-weight="700">APP CONNECTOR</text>
+      <text x="252" y="263" font-family="Inter,sans-serif" font-size="12" font-weight="600" style="fill:var(--svg-main)">tools_apps.py</text>
+      <text x="252" y="277" font-family="Inter,sans-serif" font-size="11" style="fill:var(--svg-sub)">HTTP API → OMA工具</text>
+      <text x="252" y="291" font-family="Inter,sans-serif" font-size="10.5" style="fill:var(--svg-dim)">list_apps · app_invoke</text>
+
+      <!-- BROWSER CU -->
+      <rect x="455" y="230" width="205" height="68" rx="8" fill="rgba(56,189,248,.06)"/>
+      <rect x="455" y="230" width="205" height="68" rx="8" fill="none" stroke="rgba(56,189,248,.45)" stroke-width="1.3"/>
+      <text x="470" y="247" font-family="JetBrains Mono,monospace" font-size="9.5" fill="#38bdf8" font-weight="700">BROWSER CU</text>
+      <text x="470" y="263" font-family="Inter,sans-serif" font-size="12" font-weight="600" style="fill:var(--svg-main)">tools_browser.py</text>
+      <text x="470" y="277" font-family="Inter,sans-serif" font-size="11" style="fill:var(--svg-sub)">Playwright Computer Use</text>
+      <text x="470" y="291" font-family="Inter,sans-serif" font-size="10.5" style="fill:var(--svg-dim)">snapshot · click · type</text>
+
+      <!-- CONTEXT -->
+      <rect x="20" y="314" width="640" height="34" rx="8" fill="url(#gContext)" opacity=".08"/>
+      <rect x="20" y="314" width="640" height="34" rx="8" fill="none" stroke="url(#gContext)" stroke-width="1.2"/>
+      <text x="36" y="328" font-family="JetBrains Mono,monospace" font-size="10" fill="#9b7fe8" font-weight="700">CONTEXT</text>
+      <text x="36" y="342" font-family="Inter,sans-serif" font-size="11.5" font-weight="500" style="fill:var(--svg-main)">context.py · TaskState · 三档滑动窗口压缩 · token估算 · 水位触发</text>
+
+      <!-- LLM CLIENT -->
+      <rect x="20" y="364" width="310" height="44" rx="8" fill="url(#gLLM)" opacity=".07"/>
+      <rect x="20" y="364" width="310" height="44" rx="8" fill="none" stroke="url(#gLLM)" stroke-width="1.2"/>
+      <text x="35" y="381" font-family="JetBrains Mono,monospace" font-size="10" fill="#38bdf8" font-weight="700">LLM CLIENT</text>
+      <text x="35" y="397" font-family="Inter,sans-serif" font-size="12" font-weight="500" style="fill:var(--svg-main)">llm.py · requests · 重试 · 方言兼容</text>
+
+      <!-- CATALOG -->
+      <rect x="346" y="364" width="314" height="44" rx="8" fill="url(#gCat)" opacity=".07"/>
+      <rect x="346" y="364" width="314" height="44" rx="8" fill="none" stroke="url(#gCat)" stroke-width="1.2"/>
+      <text x="362" y="381" font-family="JetBrains Mono,monospace" font-size="10" fill="#3ecf8e" font-weight="700">CATALOG</text>
+      <text x="362" y="397" font-family="Inter,sans-serif" font-size="12" font-weight="500" style="fill:var(--svg-main)">catalog.py · Skill/Agent扫描 · 优先级路径</text>
+
+      <!-- CONFIG -->
+      <rect x="20" y="424" width="310" height="44" rx="8" fill="url(#gBot)" opacity=".10"/>
+      <rect x="20" y="424" width="310" height="44" rx="8" fill="none" stroke="rgba(74,98,128,.55)" stroke-width="1.2"/>
+      <text x="35" y="441" font-family="JetBrains Mono,monospace" font-size="10" style="fill:var(--svg-dim)" font-weight="700">CONFIG</text>
+      <text x="35" y="457" font-family="Inter,sans-serif" font-size="12" font-weight="500" style="fill:var(--svg-main)">config.py · YAML + 四级环境变量回填</text>
+
+      <!-- TRACE -->
+      <rect x="346" y="424" width="314" height="44" rx="8" fill="url(#gBot)" opacity=".10"/>
+      <rect x="346" y="424" width="314" height="44" rx="8" fill="none" stroke="rgba(74,98,128,.55)" stroke-width="1.2"/>
+      <text x="362" y="441" font-family="JetBrains Mono,monospace" font-size="10" style="fill:var(--svg-dim)" font-weight="700">TRACE</text>
+      <text x="362" y="457" font-family="Inter,sans-serif" font-size="12" font-weight="500" style="fill:var(--svg-main)">trace.py · JSONL审计 · 每Run独立目录</text>
+    </svg>
+  </div>
+
+  <div class="two-col" style="margin-top:20px">
+    <div class="hl-box">
+      <h3 class="stitle" style="margin-top:0">依赖原则</h3>
+      <p>核心三方依赖仅 <span class="ci">requests</span> + <span class="ci">pyyaml</span>；GUI 加 <span class="ci">nicegui</span>；浏览器工具加 <span class="ci">playwright</span>。依赖方向严格自上而下，下层不导入上层。</p>
+    </div>
+    <div class="hl-box">
+      <h3 class="stitle" style="margin-top:0">核心设计哲学</h3>
+      <p>Runtime 是唯一真值引擎；GUI 是派生视图；工具是受限副作用；TaskState 是持久状态主键；Board 是团队通信唯一渠道。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ LAYERS ═══════════════ -->
+<section class="section" id="sec-layers">
+  <div class="sec-hd"><div class="sec-num">2</div><h2 class="sec-title">层级详解</h2></div>
+  <p class="sec-sub">点击下方标签页查看每一层的职责、关键设计和主要 API。</p>
+
+  <div class="tabs" id="layer-tabs">
+    <div class="tab active" data-tab="t-config">Config</div>
+    <div class="tab" data-tab="t-catalog">Catalog</div>
+    <div class="tab" data-tab="t-llm">LLM</div>
+    <div class="tab" data-tab="t-context">Context</div>
+    <div class="tab" data-tab="t-runtime">Runtime★</div>
+    <div class="tab" data-tab="t-tools">Tools</div>
+    <div class="tab" data-tab="t-apps">Apps</div>
+    <div class="tab" data-tab="t-browser">Browser</div>
+    <div class="tab" data-tab="t-swarm">Swarm</div>
+    <div class="tab" data-tab="t-gui">GUI</div>
+    <div class="tab" data-tab="t-trace">Trace</div>
+  </div>
+
+  <div class="tab-panel active" id="t-config">
+    <div class="layer-desc"><h5>📄 oma/config.py — 配置加载引擎</h5><p>实现 YAML 加载 + 四级环境变量自动回填，确保零配置可运行，有配置精准控制。</p></div>
+    <h3 class="stitle">四级回填优先级</h3>
+    <div class="tbl-wrap"><table><thead><tr><th>优先级</th><th>来源</th><th>说明</th></tr></thead><tbody>
+      <tr><td><span class="badge b-red">1 最高</span></td><td>YAML 显式值</td><td>含 <span class="ci">{env:VAR}</span> 已展开的字段值</td></tr>
+      <tr><td><span class="badge b-orange">2</span></td><td><span class="ci">env:</span> 节手动映射</td><td>YAML 中 <span class="ci">env.base_url: MY_URL</span> 形式</td></tr>
+      <tr><td><span class="badge b-blue">3</span></td><td><span class="ci">env_prefix</span> 前缀</td><td>如 <span class="ci">env_prefix: MAS</span> → 自动试 MAS_BASE_URL</td></tr>
+      <tr><td><span class="badge b-gray">4 兜底</span></td><td>全局环境变量扫描</td><td>扫描所有 env，匹配后缀 _BASE_URL / _API_KEY</td></tr>
+    </tbody></table></div>
+    <div class="code-block"><div class="code-hd"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div><div class="lang-tag">yaml</div><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+    <pre><span class="cmt"># 单变量</span>
+<span class="ky">model</span>: <span class="str">"{env:OMA_LLM_MODEL}"</span>
+<span class="cmt"># 管道回退：优先 PRIMARY，不存在则 FALLBACK</span>
+<span class="ky">api_key</span>: <span class="str">"{env:MY_KEY|OPENAI_API_KEY}"</span>
+<span class="cmt"># 带默认值</span>
+<span class="ky">base_url</span>: <span class="str">"{env:OMA_BASE_URL:-http://localhost:11434/v1}"</span></pre></div>
+  </div>
+
+  <div class="tab-panel" id="t-catalog">
+    <div class="layer-desc"><h5>📚 oma/catalog.py — Skill/Agent 扫描与缓存</h5><p>扫描工作区及用户主目录中的 Skill 和 Agent 定义，构建可用能力目录，供 Runtime 在 System Prompt 中注入。</p></div>
+    <h3 class="stitle">扫描路径优先级（高→低）</h3>
+    <div class="two-col">
+      <div><h4 style="font-size:12.5px;color:var(--text);margin-bottom:8px">Skill 路径</h4>
+      <div class="tbl-wrap"><table><thead><tr><th>路径</th></tr></thead><tbody>
+        <tr><td><span class="ci">.oma/skills/{name}/SKILL.md</span></td></tr>
+        <tr><td><span class="ci">.opencode/skills/{name}/SKILL.md</span></td></tr>
+        <tr><td><span class="ci">.claude/skills/{name}/SKILL.md</span></td></tr>
+        <tr><td><span class="ci">~/.oma/skills/{name}/SKILL.md</span></td></tr>
+      </tbody></table></div></div>
+      <div><h4 style="font-size:12.5px;color:var(--text);margin-bottom:8px">Agent 路径（先到先得）</h4>
+      <div class="tbl-wrap"><table><thead><tr><th>路径</th></tr></thead><tbody>
+        <tr><td><span class="ci">.oma/agents/{name}.md</span> 办公岗</td></tr>
+        <tr><td><span class="ci">.opencode/agents/{name}.md</span> 编码岗</td></tr>
+        <tr><td><span class="ci">catalog.extra_agent_dirs</span></td></tr>
+        <tr><td><span class="ci">~/.oma/agents</span> · <span class="ci">~/.config/opencode/agents</span></td></tr>
+        <tr><td><span class="ci">oma/agents</span> 包内兜底</td></tr>
+        <tr><td>不扫描 <span class="ci">default_bots/</span></td></tr>
+      </tbody></table></div></div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="t-llm">
+    <div class="layer-desc"><h5>🧠 oma/llm.py — OpenAI 兼容 LLM 客户端</h5><p>纯 requests 实现，不依赖 openai SDK。支持工具调用、自动重试。解析 agent 卡 model: main/fast；FAST 失败降级主模型。</p></div>
+    <div class="card-grid">
+      <div class="card"><div class="card-icon">🔄</div><h4>自动重试</h4><p>指数退避重试，HTTP 5xx 触发，4xx 直接返回错误。默认重试3次。</p></div>
+      <div class="card"><div class="card-icon">🌏</div><h4>方言兼容</h4><p><span class="ci">normalize_messages</span> 将中间 system 消息改写为 user，避免 Qwen/vLLM 拒绝。</p></div>
+      <div class="card"><div class="card-icon">🧩</div><h4>思考字段提取</h4><p>按序尝试 content → reasoning_content → thinking，适配 DeepSeek-R1 等思考型模型。</p></div>
+      <div class="card"><div class="card-icon">⏱</div><h4>频率控制</h4><p><span class="ci">llm_min_interval</span> 保证两次调用最小间隔，防速率限制。</p></div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="t-context">
+    <div class="layer-desc"><h5>📊 oma/context.py — TaskState 与上下文压缩</h5><p>TaskState 是贯穿整个运行周期的状态主键，上下文压缩通过三档水位触发，防止 Token 超限。</p></div>
+    <h3 class="stitle">三档压缩水位</h3>
+    <div class="tbl-wrap"><table><thead><tr><th>触发条件</th><th>行为</th></tr></thead><tbody>
+      <tr><td><span class="badge b-blue">≥ 70%</span> summary_watermark</td><td>保留最近 <span class="ci">sliding_window</span>（默认12）轮，旧轮压缩进 &lt;compacted&gt; 摘要块</td></tr>
+      <tr><td><span class="badge b-orange">≥ 85%</span> hard_watermark</td><td>保留最近4轮，截断大体积 tool result（超800字符部分替换为省略提示）</td></tr>
+      <tr><td><span class="badge b-red">≥ 95%</span> 紧急水位</td><td>注入紧急提示，要求立即 finish 或 ask_user</td></tr>
+    </tbody></table></div>
+  </div>
+
+  <div class="tab-panel" id="t-runtime">
+    <div class="layer-desc"><h5>⚙️ oma/runtime.py — ReAct 执行引擎（核心）</h5><p>实现 Reason+Act 循环，管理多 Bot 并发、Board 看板、Lease 写锁、Spawn/Collect 协议和中断机制。</p></div>
+    <h3 class="stitle">公共 API</h3>
+    <div class="tbl-wrap"><table><thead><tr><th>方法</th><th>说明</th></tr></thead><tbody>
+      <tr><td><span class="ci">start(goal, agent, swarm)</span></td><td>创建 Run，初始化 root Bot，返回 run_id</td></tr>
+      <tr><td><span class="ci">step(run_id)</span></td><td>执行一步（一次 LLM 调用 + 工具执行），返回事件字典</td></tr>
+      <tr><td><span class="ci">run_until_idle(run_id)</span></td><td>循环 step 直到 waiting_user / done / error / cancelled</td></tr>
+      <tr><td><span class="ci">resume(run_id, interrupt_id, decision)</span></td><td>回应中断（approve/deny/answer），恢复执行</td></tr>
+      <tr><td><span class="ci">pending(run_id)</span></td><td>获取所有待处理中断列表</td></tr>
+      <tr><td><span class="ci">final_text(run_id)</span></td><td>提取用户可见的最终回复文本</td></tr>
+      <tr><td><span class="ci">cancel(run_id)</span></td><td>取消整个 Run，所有 Bot 状态变为 cancelled</td></tr>
+      <tr><td><span class="ci">board(run_id)</span></td><td>获取当前 Board 快照</td></tr>
+    </tbody></table></div>
+  </div>
+
+  <div class="tab-panel" id="t-tools">
+    <div class="layer-desc"><h5>🔧 oma/tools.py — 内置工具执行器</h5><p>27 种内置工具，分为文件操作、技能管理、团队工具、控制工具四类。详见"工具参考"章节。</p></div>
+    <div class="card-grid">
+      <div class="card"><div class="card-icon">🚫</div><h4>命令黑名单</h4><p>内置 rm -rf、mkfs、shutdown 等拦截，支持自定义正则危险模式。</p></div>
+      <div class="card"><div class="card-icon">📁</div><h4>写 Lease</h4><p>基于 glob 的写文件独占锁。orchestrator 完全禁止写文件。</p></div>
+      <div class="card"><div class="card-icon">🔒</div><h4>路径逃逸检测</h4><p><span class="ci">resolve_in_ws</span> 确保所有路径在 workspace 内。</p></div>
+      <div class="card"><div class="card-icon">📝</div><h4>审计日志</h4><p>所有 bash 命令（通过/拒绝）写入 <span class="ci">command_audit.log</span>。</p></div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="t-apps">
+    <div class="layer-desc"><h5>🔌 oma/tools_apps.py — HTTP API 连接器</h5><p>无需写代码，通过 YAML 声明将任意 HTTP REST API 暴露为 OMA 工具。</p></div>
+    <div class="tbl-wrap"><table><thead><tr><th>鉴权类型</th><th>配置</th><th>说明</th></tr></thead><tbody>
+      <tr><td><span class="badge b-blue">bearer</span></td><td><span class="ci">auth.type: bearer</span></td><td>Authorization: Bearer {token}</td></tr>
+      <tr><td><span class="badge b-orange">header</span></td><td><span class="ci">auth.type: header</span></td><td>自定义请求头名称</td></tr>
+      <tr><td><span class="badge b-purple">basic</span></td><td><span class="ci">auth.type: basic</span></td><td>HTTP Basic Auth，Base64 编码</td></tr>
+      <tr><td><span class="badge b-gray">none</span></td><td><span class="ci">auth.type: none</span></td><td>无鉴权（公开 API）</td></tr>
+    </tbody></table></div>
+  </div>
+
+  <div class="tab-panel" id="t-browser">
+    <div class="layer-desc"><h5>🌐 oma/tools_browser.py — 浏览器 Computer Use</h5><p>基于 Playwright 的 Web 自动化工具组。优先用 a11y snapshot，一次 tool call 一个动作。</p></div>
+    <div class="alert a-warn"><div class="alert-icon">⚠️</div>需额外安装：<span class="ci">pip install playwright && playwright install chromium</span>。未安装时工具自动降级为不可用。</div>
+    <div class="flow-box"><p style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#9bb4d0;line-height:2.2">
+      <span style="color:#61afef">browser_open</span>(url) → 导航并返回初始 snapshot<br>
+      → <span style="color:#61afef">browser_snapshot</span>() → 获取 [ref] 元素列表<br>
+      → <span style="color:#61afef">browser_click</span>(ref) 或 <span style="color:#61afef">browser_type</span>(ref, text)<br>
+      → <span style="color:#61afef">browser_scroll</span>(direction) → 滚动加载更多<br>
+      → <span style="color:#98c379">finish</span>(summary) 或继续循环
+    </p></div>
+  </div>
+
+  <div class="tab-panel" id="t-swarm">
+    <div class="layer-desc"><h5>🐝 oma/swarm.py — 自动专家派发</h5><p>基于关键词启发式自动选择专家 Bot，复用 spawn/collect 机制实现并行。</p></div>
+    <div class="tbl-wrap"><table><thead><tr><th>关键词</th><th>推荐专家</th></tr></thead><tbody>
+      <tr><td>代码、实现、bug、重构</td><td><span class="ci">explorer</span> <span class="ci">implementer</span></td></tr>
+      <tr><td>调研、搜索、新闻、资料</td><td><span class="ci">researcher</span> <span class="ci">web-scout</span></td></tr>
+      <tr><td>纪要、会议、待办</td><td><span class="ci">minutes</span></td></tr>
+      <tr><td>翻译、英文、日文</td><td><span class="ci">translator</span></td></tr>
+      <tr><td>无匹配（通用）</td><td><span class="ci">explorer</span> <span class="ci">researcher</span> <span class="ci">implementer</span></td></tr>
+    </tbody></table></div>
+  </div>
+
+  <div class="tab-panel" id="t-gui">
+    <div class="layer-desc"><h5>🖥 oma4_bot_gui.py — NiceGUI 桌面前端</h5><p>4000+ 行的完整桌面应用。display_messages 是唯一真值，所有 UI 渲染从它派生，无双向绑定。</p></div>
+    <div class="tbl-wrap"><table><thead><tr><th>模式</th><th>底层调用</th><th>适用场景</th></tr></thead><tbody>
+      <tr><td><span class="badge b-blue">⚡ 快速</span></td><td><span class="ci">run_auto</span> + 较小 budget</td><td>简单查询、快速回答</td></tr>
+      <tr><td><span class="badge b-purple">✨ 专家</span></td><td><span class="ci">run_auto</span> 全 budget</td><td>复杂任务、需要工具</td></tr>
+      <tr><td><span class="badge b-orange">🌟 北极星</span></td><td><span class="ci">run_relentless</span></td><td>长时间执行、不设上限</td></tr>
+      <tr><td><span class="badge b-gray">💬 Chat</span></td><td>直接 LLM 对话，无工具</td><td>规划讨论、头脑风暴</td></tr>
+    </tbody></table></div>
+  </div>
+
+  <div class="tab-panel" id="t-trace">
+    <div class="layer-desc"><h5>📊 oma/trace.py — 不可变审计追踪</h5><p>每次 start() 产生独立 run 目录，append-only JSONL 事件流，完整记录所有关键事件。</p></div>
+    <div class="code-block"><div class="code-hd"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div><div class="lang-tag">tree</div></div>
+    <pre>runs/
+└── 20260908-143022-<span class="fn">a1b2</span>/
+    ├── <span class="kw">trace.jsonl</span>          <span class="cmt"># append-only 事件流</span>
+    ├── meta.json
+    ├── board.json
+    ├── task_state.json
+    └── bots/
+        └── bot_xxx/
+            └── task_state.json</pre></div>
+  </div>
+</section>
+
+<!-- ═══════════════ TOOLS ═══════════════ -->
+<section class="section" id="sec-tools">
+  <div class="sec-hd"><div class="sec-num">3</div><h2 class="sec-title">工具参考（27种）</h2></div>
+  <p class="sec-sub">所有内置工具及其参数、权限控制和使用说明。orchestrator 禁止使用写文件类工具。</p>
+  <div class="filter-row">
+    <span style="font-size:12px;color:var(--text3)">分类筛选：</span>
+    <div class="filter-btn on" data-filter="all">全部 (27)</div>
+    <div class="filter-btn" data-filter="file">文件 (7)</div>
+    <div class="filter-btn" data-filter="skill">Skill (3)</div>
+    <div class="filter-btn" data-filter="team">团队 (6)</div>
+    <div class="filter-btn" data-filter="control">控制 (5)</div>
+    <div class="filter-btn" data-filter="agent">Agent (2)</div>
+    <div class="filter-btn" data-filter="app">App (3)</div>
+    <div class="filter-btn" data-filter="browser">浏览器 (7)</div>
+    <input class="search-in" id="tool-search" placeholder="🔍 搜索工具名...">
+  </div>
+  <div class="tbl-wrap">
+    <table id="tools-table">
+      <thead><tr><th>工具名</th><th>分类</th><th>关键参数</th><th>说明</th><th>权限</th></tr></thead>
+      <tbody>
+        <tr data-cat="file"><td><span class="ci">read_file</span></td><td><span class="badge b-blue">文件</span></td><td><span class="ci">path</span> <span class="ci">offset</span> <span class="ci">limit</span></td><td>按行读取，支持分片</td><td><span class="badge b-gray">read</span></td></tr>
+        <tr data-cat="file"><td><span class="ci">write_file</span></td><td><span class="badge b-blue">文件</span></td><td><span class="ci">path</span> <span class="ci">content</span></td><td>覆盖写整文件，需 lease 授权</td><td><span class="badge b-orange">edit+lease</span></td></tr>
+        <tr data-cat="file"><td><span class="ci">edit_file</span></td><td><span class="badge b-blue">文件</span></td><td><span class="ci">path</span> <span class="ci">old_string</span> <span class="ci">new_string</span></td><td>精确字符串替换，唯一匹配</td><td><span class="badge b-orange">edit+lease</span></td></tr>
+        <tr data-cat="file"><td><span class="ci">list_dir</span></td><td><span class="badge b-blue">文件</span></td><td><span class="ci">path</span></td><td>列目录，目录后缀/，最多500条</td><td><span class="badge b-gray">list</span></td></tr>
+        <tr data-cat="file"><td><span class="ci">glob</span></td><td><span class="badge b-blue">文件</span></td><td><span class="ci">pattern</span></td><td>通配符查找，返回相对路径，最多400条</td><td><span class="badge b-gray">glob</span></td></tr>
+        <tr data-cat="file"><td><span class="ci">grep</span></td><td><span class="badge b-blue">文件</span></td><td><span class="ci">pattern</span> <span class="ci">path</span> <span class="ci">max_hits</span></td><td>正则搜索内容，默认最多80条</td><td><span class="badge b-gray">grep</span></td></tr>
+        <tr data-cat="file"><td><span class="ci">bash</span></td><td><span class="badge b-red">Shell</span></td><td><span class="ci">command</span> <span class="ci">timeout</span></td><td>执行 shell 命令，黑名单过滤，写审计日志</td><td><span class="badge b-red">bash+lease</span></td></tr>
+        <tr data-cat="skill"><td><span class="ci">list_skills</span></td><td><span class="badge b-purple">Skill</span></td><td>—</td><td>列出所有技能名称和描述摘要</td><td><span class="badge b-gray">skill</span></td></tr>
+        <tr data-cat="skill"><td><span class="ci">use_skill</span></td><td><span class="badge b-purple">Skill</span></td><td><span class="ci">name</span></td><td>加载 SKILL.md 体入上下文</td><td><span class="badge b-gray">skill</span></td></tr>
+        <tr data-cat="skill"><td><span class="ci">read_skill_file</span></td><td><span class="badge b-purple">Skill</span></td><td><span class="ci">name</span> <span class="ci">rel_path</span></td><td>读技能目录内指定文件</td><td><span class="badge b-gray">skill</span></td></tr>
+        <tr data-cat="team"><td><span class="ci">spawn_agent</span></td><td><span class="badge b-teal">团队</span></td><td><span class="ci">agent</span> <span class="ci">goal</span> <span class="ci">wait</span> <span class="ci">exclusive_globs</span></td><td>派发子 Agent（sync同步/collect异步）</td><td><span class="badge b-orange">task（worker禁用）</span></td></tr>
+        <tr data-cat="team"><td><span class="ci">collect_agent</span></td><td><span class="badge b-teal">团队</span></td><td><span class="ci">spawn_id</span></td><td>收集已完成子 Agent 结果</td><td><span class="badge b-gray">只读</span></td></tr>
+        <tr data-cat="team"><td><span class="ci">list_board</span></td><td><span class="badge b-teal">团队</span></td><td><span class="ci">item_id</span></td><td>列 Board 所有 item 或查看单条详情</td><td><span class="badge b-gray">只读</span></td></tr>
+        <tr data-cat="team"><td><span class="ci">upsert_item</span></td><td><span class="badge b-teal">团队</span></td><td><span class="ci">item_id</span> <span class="ci">title</span> <span class="ci">goal</span></td><td>创建或更新 Board item</td><td><span class="badge b-orange">orchestrator</span></td></tr>
+        <tr data-cat="team"><td><span class="ci">post_item</span></td><td><span class="badge b-teal">团队</span></td><td><span class="ci">item_id</span> <span class="ci">body</span></td><td>向 Board item 写评论（唯一团队通信渠道）</td><td><span class="badge b-gray">所有Bot</span></td></tr>
+        <tr data-cat="team"><td><span class="ci">handoff_item</span></td><td><span class="badge b-teal">团队</span></td><td><span class="ci">item_id</span> <span class="ci">to_agent</span></td><td>将 item 转交另一 Agent</td><td><span class="badge b-orange">orchestrator</span></td></tr>
+        <tr data-cat="control"><td><span class="ci">update_task_state</span></td><td><span class="badge b-green">控制</span></td><td><span class="ci">patch</span></td><td>修改 TaskState，不可变字段受保护</td><td><span class="badge b-gray">所有Bot</span></td></tr>
+        <tr data-cat="control"><td><span class="ci">ask_user</span></td><td><span class="badge b-green">控制</span></td><td><span class="ci">question</span> <span class="ci">why</span> <span class="ci">choices</span></td><td>阻塞式用户提问，有防重复 hash</td><td><span class="badge b-gray">所有Bot</span></td></tr>
+        <tr data-cat="control"><td><span class="ci">finish</span></td><td><span class="badge b-green">控制</span></td><td><span class="ci">summary</span> <span class="ci">criteria_check</span></td><td>声明任务完成，检查 Board open items</td><td><span class="badge b-gray">所有Bot</span></td></tr>
+        <tr data-cat="control"><td><span class="ci">compact_now</span></td><td><span class="badge b-green">控制</span></td><td>—</td><td>主动触发上下文压缩</td><td><span class="badge b-gray">所有Bot</span></td></tr>
+        <tr data-cat="control"><td><span class="ci">web_fetch</span></td><td><span class="badge b-green">控制</span></td><td><span class="ci">url</span></td><td>HTTP GET 拉取网页文本，自动截断超限内容</td><td><span class="badge b-gray">webfetch</span></td></tr>
+        <tr data-cat="agent"><td><span class="ci">list_agents</span></td><td><span class="badge b-blue">Agent</span></td><td>—</td><td>列出所有已定义 Agent 的名称、描述、team_role</td><td><span class="badge b-gray">只读</span></td></tr>
+        <tr data-cat="agent"><td><span class="ci">list_apps</span></td><td><span class="badge b-orange">App</span></td><td>—</td><td>枚举所有已配置的 HTTP API App</td><td><span class="badge b-gray">可选</span></td></tr>
+        <tr data-cat="app"><td><span class="ci">app_describe</span></td><td><span class="badge b-orange">App</span></td><td><span class="ci">app</span></td><td>查看指定 App 的全部操作和路径参数</td><td><span class="badge b-gray">可选</span></td></tr>
+        <tr data-cat="app"><td><span class="ci">app_invoke</span></td><td><span class="badge b-orange">App</span></td><td><span class="ci">app</span> <span class="ci">op</span> <span class="ci">path_params</span> <span class="ci">body</span></td><td>调用声明的操作，自动注入鉴权头</td><td><span class="badge b-orange">需App配置</span></td></tr>
+        <tr data-cat="browser"><td><span class="ci">browser_open</span></td><td><span class="badge b-blue">浏览器</span></td><td><span class="ci">url</span></td><td>导航至 URL，返回初始 snapshot</td><td><span class="badge b-gray">需playwright</span></td></tr>
+        <tr data-cat="browser"><td><span class="ci">browser_snapshot</span></td><td><span class="badge b-blue">浏览器</span></td><td>—</td><td>获取页面可交互元素列表，带 [ref] 编号</td><td><span class="badge b-gray">需playwright</span></td></tr>
+        <tr data-cat="browser"><td><span class="ci">browser_click</span></td><td><span class="badge b-blue">浏览器</span></td><td><span class="ci">ref</span></td><td>点击 snapshot 中指定 ref 元素</td><td><span class="badge b-gray">需playwright</span></td></tr>
+        <tr data-cat="browser"><td><span class="ci">browser_type</span></td><td><span class="badge b-blue">浏览器</span></td><td><span class="ci">ref</span> <span class="ci">text</span> <span class="ci">press_enter</span></td><td>向元素输入文字，可选按回车</td><td><span class="badge b-gray">需playwright</span></td></tr>
+        <tr data-cat="browser"><td><span class="ci">browser_scroll</span></td><td><span class="badge b-blue">浏览器</span></td><td><span class="ci">direction</span> <span class="ci">amount</span></td><td>滚动页面（down/up/top/bottom）</td><td><span class="badge b-gray">需playwright</span></td></tr>
+        <tr data-cat="browser"><td><span class="ci">browser_screenshot</span></td><td><span class="badge b-blue">浏览器</span></td><td><span class="ci">full_page</span></td><td>截图保存到 workspace</td><td><span class="badge b-gray">需playwright</span></td></tr>
+        <tr data-cat="browser"><td><span class="ci">browser_close</span></td><td><span class="badge b-blue">浏览器</span></td><td>—</td><td>关闭 Playwright 会话，释放资源</td><td><span class="badge b-gray">需playwright</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════ CONFIG ═══════════════ -->
+<section class="section" id="sec-config">
+  <div class="sec-hd"><div class="sec-num">4</div><h2 class="sec-title">配置参考</h2></div>
+  <p class="sec-sub">完整的 oma_config.yaml 各字段说明，支持通过环境变量覆盖所有值。</p>
+  <div class="two-col">
+    <div>
+      <h3 class="stitle">agent 节</h3>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px">
+        <div class="kv-row"><span class="kv-key">name</span><span class="kv-val">Agent 名称</span><span class="kv-def">默认: main</span></div>
+        <div class="kv-row"><span class="kv-key">model</span><span class="kv-val">主模型，可写 {env:OMA_LLM_MODEL}</span><span class="kv-def">必填</span></div>
+        <div class="kv-row"><span class="kv-key">base_url</span><span class="kv-val">API 端点</span><span class="kv-def">必填</span></div>
+        <div class="kv-row"><span class="kv-key">api_key</span><span class="kv-val">Bearer Token</span><span class="kv-def">可空</span></div>
+        <div class="kv-row"><span class="kv-key">temperature</span><span class="kv-val">采样温度</span><span class="kv-def">默认: 0.2</span></div>
+        <div class="kv-row"><span class="kv-key">max_tokens</span><span class="kv-val">单次最大 token</span><span class="kv-def">默认: 8192</span></div>
+        <div class="kv-row"><span class="kv-key">max_iterations</span><span class="kv-val">单 Bot 最大迭代</span><span class="kv-def">默认: 80</span></div>
+      </div>
+      <h3 class="stitle">routing 节</h3>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:18px">
+        <div class="kv-row"><span class="kv-key">enabled</span><span class="kv-val">快慢分流开关，默认开</span><span class="kv-def">true</span></div>
+        <div class="kv-row"><span class="kv-key">main_model</span><span class="kv-val">通常同 agent.model</span><span class="kv-def">OMA_LLM_MODEL</span></div>
+        <div class="kv-row"><span class="kv-key">fast_model</span><span class="kv-val">便宜模型，空则降级主模型</span><span class="kv-def">OMA_FAST_MODEL</span></div>
+      </div>
+      <h3 class="stitle">context 节</h3>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px">
+        <div class="kv-row"><span class="kv-key">max_tokens</span><span class="kv-val">上下文 token 上限</span><span class="kv-def">默认: 128000</span></div>
+        <div class="kv-row"><span class="kv-key">sliding_window</span><span class="kv-val">70% 水位保留轮数</span><span class="kv-def">默认: 12</span></div>
+        <div class="kv-row"><span class="kv-key">summary_watermark</span><span class="kv-val">轻度压缩触发点</span><span class="kv-def">默认: 0.70</span></div>
+        <div class="kv-row"><span class="kv-key">hard_watermark</span><span class="kv-val">重度压缩触发点</span><span class="kv-def">默认: 0.85</span></div>
+        <div class="kv-row"><span class="kv-key">tool_result_max_chars</span><span class="kv-val">工具结果最大字符数</span><span class="kv-def">默认: 5000</span></div>
+      </div>
+    </div>
+    <div>
+      <h3 class="stitle">team 节</h3>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px">
+        <div class="kv-row"><span class="kv-key">enabled</span><span class="kv-val">是否启用团队协作</span><span class="kv-def">默认: true</span></div>
+        <div class="kv-row"><span class="kv-key">default_wait</span><span class="kv-val">spawn 默认等待模式</span><span class="kv-def">默认: collect</span></div>
+        <div class="kv-row"><span class="kv-key">child_max_iterations</span><span class="kv-val">子 Bot 最大迭代数</span><span class="kv-def">默认: 40</span></div>
+        <div class="kv-row"><span class="kv-key">swarm.enabled</span><span class="kv-val">是否启动 Swarm</span><span class="kv-def">默认: false</span></div>
+        <div class="kv-row"><span class="kv-key">swarm.max_workers</span><span class="kv-val">Swarm 最大专家数</span><span class="kv-def">默认: 3</span></div>
+      </div>
+      <h3 class="stitle">interrupt 节</h3>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px">
+        <div class="kv-row"><span class="kv-key">enabled</span><span class="kv-val">是否允许中断</span><span class="kv-def">默认: true</span></div>
+        <div class="kv-row"><span class="kv-key">default_timeout_sec</span><span class="kv-val">等待用户超时（秒）</span><span class="kv-def">默认: 300</span></div>
+        <div class="kv-row"><span class="kv-key">on_approval_timeout</span><span class="kv-val">审批超时策略</span><span class="kv-def">deny</span></div>
+        <div class="kv-row"><span class="kv-key">max_questions_per_bot</span><span class="kv-val">每 Bot 最大提问次数</span><span class="kv-def">默认: 8</span></div>
+        <div class="kv-row"><span class="kv-key">remember_session</span><span class="kv-val">会话内缓存审批结果</span><span class="kv-def">默认: true</span></div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="stitle">完整示例</h3>
+  <div class="code-block"><div class="code-hd"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div><div class="lang-tag">oma_config.yaml</div><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+  <pre><span class="ky">agent</span>:
+  <span class="ky">name</span>: <span class="vl">main</span>
+  <span class="ky">model</span>:    <span class="str">"{env:OMA_LLM_MODEL}"</span>
+  <span class="ky">base_url</span>: <span class="str">"{env:OMA_BASE_URL}"</span>
+  <span class="ky">api_key</span>:  <span class="str">"{env:OMA_API_KEY}"</span>
+  <span class="ky">temperature</span>: <span class="num">0.2</span>
+  <span class="ky">max_tokens</span>: <span class="num">8192</span>
+  <span class="ky">max_iterations</span>: <span class="num">80</span>
+
+<span class="ky">runtime</span>:
+  <span class="ky">max_concurrent_bots</span>: <span class="num">2</span>
+
+<span class="ky">team</span>:
+  <span class="ky">enabled</span>: <span class="bl">true</span>
+  <span class="ky">default_wait</span>: <span class="vl">collect</span>
+  <span class="ky">child_max_iterations</span>: <span class="num">40</span>
+  <span class="ky">swarm</span>:
+    <span class="ky">enabled</span>: <span class="bl">false</span>
+    <span class="ky">max_workers</span>: <span class="num">3</span>
+
+<span class="ky">command_safety</span>:
+  <span class="ky">enabled</span>: <span class="bl">true</span>
+  <span class="ky">blacklist</span>: [<span class="str">"rm -rf"</span>, <span class="str">"mkfs"</span>, <span class="str">"shutdown"</span>]
+
+<span class="ky">interrupt</span>:
+  <span class="ky">enabled</span>: <span class="bl">true</span>
+  <span class="ky">default_timeout_sec</span>: <span class="num">300</span>
+  <span class="ky">remember_session</span>: <span class="bl">true</span></pre></div>
+</section>
+
+<!-- ═══════════════ QUICKSTART ═══════════════ -->
+<section class="section" id="sec-quickstart">
+  <div class="sec-hd"><div class="sec-num">5</div><h2 class="sec-title">快速上手</h2></div>
+  <p class="sec-sub">三步开始使用 OMA Core，无需任何配置文件。</p>
+  <div class="tabs" id="qs-tabs">
+    <div class="tab active" data-tab="qs-env">① 环境变量</div>
+    <div class="tab" data-tab="qs-gui">② 启动GUI</div>
+    <div class="tab" data-tab="qs-code">③ 代码集成</div>
+    <div class="tab" data-tab="qs-skill">④ 创建Skill</div>
+    <div class="tab" data-tab="qs-agent">⑤ 创建Agent</div>
+  </div>
+  <div class="tab-panel active" id="qs-env">
+    <div class="code-block"><div class="code-hd"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div><div class="lang-tag">bash</div><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+    <pre><span class="cmt"># 本地 Ollama</span>
+<span class="kw">export</span> OMA_BASE_URL=<span class="str">http://localhost:11434/v1</span>
+<span class="kw">export</span> OMA_API_KEY=<span class="str">ollama</span>
+<span class="kw">export</span> OMA_LLM_MODEL=<span class="str">qwen2.5:14b</span>
+
+<span class="cmt"># DeepSeek 云端</span>
+<span class="kw">export</span> OMA_BASE_URL=<span class="str">https://api.deepseek.com</span>
+<span class="kw">export</span> OMA_API_KEY=<span class="str">sk-xxxxxxxxxxxxxxxx</span>
+<span class="kw">export</span> OMA_LLM_MODEL=<span class="str">deepseek-chat</span></pre></div>
+  </div>
+  <div class="tab-panel" id="qs-gui">
+    <div class="code-block"><div class="code-hd"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div><div class="lang-tag">bash</div><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+    <pre>pip install nicegui pyyaml requests
+python oma4_bot_gui.py
+<span class="cmt"># 浏览器模式 / 指定端口</span>
+OMA_APP=0 python oma4_bot_gui.py
+OMA_PORT=8080 python oma4_bot_gui.py</pre></div>
+  </div>
+  <div class="tab-panel" id="qs-code">
+    <div class="code-block"><div class="code-hd"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div><div class="lang-tag">python</div><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+    <pre><span class="kw">from</span> <span class="cls">oma</span> <span class="kw">import</span> Runtime
+rt = <span class="cls">Runtime</span>(workspace=<span class="str">"."</span>)
+run_id = rt.<span class="fn">start</span>(<span class="str">"统计 src/ 目录下所有 Python 文件的总行数"</span>)
+result = rt.<span class="fn">run_until_idle</span>(run_id)
+<span class="fn">print</span>(result[<span class="str">"text"</span>])</pre></div>
+  </div>
+  <div class="tab-panel" id="qs-skill">
+    <div class="code-block"><div class="code-hd"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div><div class="lang-tag">.oma/skills/python-review/SKILL.md</div><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+    <pre><span class="vr">---</span>
+<span class="ky">name</span>: python-review
+<span class="ky">description</span>: Python 代码审查最佳实践
+<span class="vr">---</span>
+<span class="cmt"># Python 代码审查清单</span>
+- 避免 eval() / exec()
+- 使用参数化查询防 SQL 注入
+- 函数长度不超过 50 行</pre></div>
+  </div>
+  <div class="tab-panel" id="qs-agent">
+    <div class="code-block"><div class="code-hd"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div><div class="lang-tag">.oma/agents/code-reviewer.md</div><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+    <pre><span class="vr">---</span>
+<span class="ky">description</span>: 专业代码审查 Agent，只读不写
+<span class="ky">team_role</span>: worker
+<span class="ky">edit</span>: deny
+<span class="ky">bash</span>: deny
+<span class="ky">max_steps</span>: <span class="num">20</span>
+<span class="vr">---</span>
+你是严格的代码审查员，只读取代码文件，不修改任何内容。
+完成后调用 finish。</pre></div>
+  </div>
+</section>
+
+<!-- ═══════════════ SCENARIOS ═══════════════ -->
+<section class="section" id="sec-scenarios">
+  <div class="sec-hd"><div class="sec-num">6</div><h2 class="sec-title">使用场景详例</h2></div>
+  <p class="sec-sub">从文件统计到内容流水线、日更调研、改代码、来信闭环和 GUI 配置。S1–S10，点击展开。</p>
+  <div id="scenarios-list">
+    <div class="scenario-item">
+      <div class="sc-hd" onclick="toggleScenario(this)">
+        <div><div class="scenario-head"><div class="sc-num" style="background:rgba(26,107,189,.15);color:var(--blue2)">S1</div><h4>文件操作与代码分析</h4></div><div class="sc-desc">统计行数、搜索模式、读写文件</div></div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="sc-body">
+        <div class="code-block"><div class="code-hd"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div><div class="lang-tag">python</div><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+        <pre><span class="kw">from</span> <span class="cls">oma</span> <span class="kw">import</span> Runtime
+rt = <span class="cls">Runtime</span>(workspace=<span class="str">"/path/to/project"</span>)
+run_id = rt.<span class="fn">start</span>(<span class="str">"统计 src/ 目录下所有 .py 文件的总行数"</span>)
+ev = rt.<span class="fn">run_until_idle</span>(run_id)
+<span class="fn">print</span>(ev[<span class="str">'text'</span>])</pre></div>
+      </div>
+    </div>
+    <div class="scenario-item">
+      <div class="sc-hd" onclick="toggleScenario(this)">
+        <div><div class="scenario-head"><div class="sc-num" style="background:rgba(26,138,94,.12);color:var(--green)">S2</div><h4>多 Bot 团队并发（orchestrator 模式）</h4></div><div class="sc-desc">orchestrator 规划派发，worker 并行执行</div></div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="sc-body">
+        <div class="code-block"><div class="code-hd"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div><div class="lang-tag">python</div><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+        <pre>rt = <span class="cls">Runtime</span>(workspace=<span class="str">"."</span>)
+rt.cfg.max_concurrent_bots = <span class="num">4</span>
+run_id = rt.<span class="fn">start</span>(
+    <span class="str">"为电商平台设计并实现用户认证模块（JWT+Redis）"</span>,
+    agent=<span class="str">"tech-lead"</span>
+)
+result = rt.<span class="fn">run_until_idle</span>(run_id, max_steps=<span class="num">2000</span>)</pre></div>
+      </div>
+    </div>
+    <div class="scenario-item">
+      <div class="sc-hd" onclick="toggleScenario(this)">
+        <div><div class="scenario-head"><div class="sc-num" style="background:rgba(200,98,10,.12);color:var(--orange)">S3</div><h4>Swarm 并行调研与报告生成</h4></div><div class="sc-desc">多专家并行，root 综合结果</div></div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="sc-body">
+        <div class="code-block"><div class="code-hd"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div><div class="lang-tag">python</div><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+        <pre>rt = <span class="cls">Runtime</span>(workspace=<span class="str">"."</span>)
+rt.cfg.max_concurrent_bots = <span class="num">4</span>
+run_id = rt.<span class="fn">start</span>(
+    <span class="str">"调研 2026 年 AI 编程助手市场格局，生成完整分析报告"</span>,
+    swarm=<span class="bl">True</span>
+)
+result = rt.<span class="fn">run_until_idle</span>(run_id, max_steps=<span class="num">5000</span>)</pre></div>
+      </div>
+    </div>
+    <div class="scenario-item">
+      <div class="sc-hd" onclick="toggleScenario(this)">
+        <div><div class="scenario-head"><div class="sc-num" style="background:rgba(112,64,200,.12);color:var(--purple)">S4</div><h4>HTTP App 连接器 — GitHub API</h4></div><div class="sc-desc">声明式 YAML 将 REST API 变为工具</div></div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="sc-body">
+        <div class="code-block"><div class="code-hd"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div><div class="lang-tag">.oma/apps/github.yaml</div><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+        <pre><span class="ky">name</span>: github
+<span class="ky">base_url</span>: <span class="str">https://api.github.com</span>
+<span class="ky">auth</span>:
+  <span class="ky">type</span>: bearer
+  <span class="ky">env</span>: <span class="str">GITHUB_TOKEN</span>
+<span class="ky">ops</span>:
+  <span class="ky">list_issues</span>:
+    <span class="ky">method</span>: <span class="str">GET</span>
+    <span class="ky">path</span>: <span class="str">/repos/{owner}/{repo}/issues</span>
+  <span class="ky">create_issue</span>:
+    <span class="ky">method</span>: <span class="str">POST</span>
+    <span class="ky">path</span>: <span class="str">/repos/{owner}/{repo}/issues</span></pre></div>
+      </div>
+    </div>
+    <div class="scenario-item">
+      <div class="sc-hd" onclick="toggleScenario(this)">
+        <div><div class="scenario-head"><div class="sc-num" style="background:rgba(184,48,48,.1);color:var(--red)">S5</div><h4>带审批的危险操作（interrupt 机制）</h4></div><div class="sc-desc">敏感工具调用前弹出审批请求</div></div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="sc-body">
+        <div class="code-block"><div class="code-hd"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div><div class="lang-tag">python</div><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+        <pre>rt = <span class="cls">Runtime</span>(workspace=<span class="str">"."</span>)
+run_id = rt.<span class="fn">start</span>(<span class="str">"清理项目中所有 __pycache__ 目录"</span>)
+<span class="kw">while</span> <span class="bl">True</span>:
+    ev = rt.<span class="fn">step</span>(run_id)
+    <span class="kw">if</span> ev[<span class="str">"status"</span>] == <span class="str">"waiting_user"</span>:
+        <span class="kw">for</span> intr <span class="kw">in</span> rt.<span class="fn">pending</span>(run_id):
+            ans = <span class="fn">input</span>(<span class="str">f"⚠️ 允许: {intr['payload']['args'].get('command','')} ? (y/n): "</span>)
+            rt.<span class="fn">resume</span>(run_id, intr[<span class="str">"interrupt_id"</span>], <span class="str">"approve"</span> <span class="kw">if</span> ans==<span class="str">"y"</span> <span class="kw">else</span> <span class="str">"deny"</span>)
+    <span class="kw">if</span> ev[<span class="str">"status"</span>] <span class="kw">in</span> (<span class="str">"done"</span>,<span class="str">"error"</span>,<span class="str">"cancelled"</span>): <span class="kw">break</span></pre></div>
+      </div>
+    </div>
+    <div class="scenario-item">
+      <div class="sc-hd" onclick="toggleScenario(this)">
+        <div><div class="scenario-head"><div class="sc-num" style="background:rgba(14,138,128,.12);color:var(--teal)">S6</div><h4>内容流水线（缺源即停）</h4></div><div class="sc-desc">researcher ∥ web-scout → factcheck → brief → writer → critic</div></div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="sc-body">
+        <div class="code-block"><div class="code-hd"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div><div class="lang-tag">python</div><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+        <pre><span class="kw">from</span> <span class="cls">oma</span> <span class="kw">import</span> Runtime
+<span class="kw">from</span> <span class="cls">oma.playbooks</span> <span class="kw">import</span> apply_to_run
+
+rt = <span class="cls">Runtime</span>(workspace=<span class="str">"."</span>)
+run_id = rt.<span class="fn">start</span>(
+    <span class="str">"过去24小时值得写成帖子的 agent 进展，先核实再起草，不要发布"</span>,
+    agent=<span class="str">"orchestrator"</span>,
+)
+run = rt.runs[run_id]
+apply_to_run(rt, run, <span class="str">"content-pipeline"</span>, run_goal=run.bots[run.root_id].task_state[<span class="str">"original_goal"</span>])
+ev = rt.<span class="fn">run_until_idle</span>(run_id)
+<span class="cmt"># factcheck/critic 看不到 swarm/researcher/ 或出处 → request-changes 停</span>
+<span class="fn">print</span>(ev[<span class="str">"status"</span>], run.bots[run.root_id].task_state.get(<span class="str">"artifacts"</span>))</pre></div>
+      </div>
+    </div>
+    <div class="scenario-item">
+      <div class="sc-hd" onclick="toggleScenario(this)">
+        <div><div class="scenario-head"><div class="sc-num" style="background:rgba(14,127,168,.12);color:var(--cyan)">S7</div><h4>凌晨日更调研（人不用盯着）</h4></div><div class="sc-desc">schedule.json + cron；启用开关；立刻跑一条</div></div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="sc-body">
+        <div class="code-block"><div class="code-hd"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div><div class="lang-tag">bash</div><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+        <pre><span class="cmt"># .oma/schedule.json 里可有多条。enabled=false 的 cron 会跳过</span>
+<span class="cmt"># 本机任务计划（Windows 也可用 schtasks）</span>
+<span class="num">5</span> <span class="num">5</span> * * * cd D:/huang/data/working/python/oma-core && python -m oma.schedule_runner --run
+
+<span class="cmt"># 只跑日更这一条，忽略时刻表</span>
+python -m oma.schedule_runner --run --once-id daily-24h-research --force
+
+<span class="cmt"># 产物</span>
+<span class="cmt">#   swarm/researcher/daily-YYYYMMDD.md</span>
+<span class="cmt">#   swarm/BOARD.md</span>
+<span class="cmt">#   .oma/last_desk.json</span></pre></div>
+      </div>
+    </div>
+    <div class="scenario-item">
+      <div class="sc-hd" onclick="toggleScenario(this)">
+        <div><div class="scenario-head"><div class="sc-num" style="background:rgba(26,107,189,.15);color:var(--blue2)">S8</div><h4>最小改代码闭环</h4></div><div class="sc-desc">explorer 只读摸清 → implementer 最小补丁 → qa → code-reviewer</div></div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="sc-body">
+        <div class="code-block"><div class="code-hd"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div><div class="lang-tag">python</div><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+        <pre><span class="kw">from</span> <span class="cls">oma</span> <span class="kw">import</span> Runtime
+<span class="kw">from</span> <span class="cls">oma.playbooks</span> <span class="kw">import</span> apply_to_run
+
+rt = <span class="cls">Runtime</span>(workspace=<span class="str">"."</span>)
+goal = <span class="str">"修复 login 超时：只改认证相关文件，先定位再补丁，跑已有测试"</span>
+run_id = rt.<span class="fn">start</span>(goal, agent=<span class="str">"orchestrator"</span>)
+apply_to_run(rt, run, <span class="str">"code-change"</span>, run_goal=goal)
+ev = rt.<span class="fn">run_until_idle</span>(run_id)
+<span class="cmt"># explorer 只写 swarm/explorer/；implementer 的 exclusive_globs 才是业务代码</span>
+<span class="fn">print</span>(ev[<span class="str">"text"</span>])</pre></div>
+      </div>
+    </div>
+    <div class="scenario-item">
+      <div class="sc-hd" onclick="toggleScenario(this)">
+        <div><div class="scenario-head"><div class="sc-num" style="background:rgba(200,98,10,.12);color:var(--orange)">S9</div><h4>来信分类并起草回复（不发送）</h4></div><div class="sc-desc">inbox → secretary；邮箱未接通只用粘贴文本</div></div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="sc-body">
+        <div class="code-block"><div class="code-hd"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div><div class="lang-tag">python</div><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+        <pre>rt = <span class="cls">Runtime</span>(workspace=<span class="str">"."</span>)
+run_id = rt.<span class="fn">start</span>(
+    <span class="str">"""下面是粘贴的三封来信。分类紧急/可等/广告，
+并给前两封写回复草稿。不要调用发送。邮箱 App 未接通。
+
+1) 客户问发票是否已开，下周五要对账
+2) 同事转发会议改期
+3) 促销订阅"""</span>,
+    agent=<span class="str">"orchestrator"</span>,
+)
+apply_to_run(rt, rt.runs[run_id], <span class="str">"inbox-loop"</span>)
+ev = rt.<span class="fn">run_until_idle</span>(run_id)
+<span class="cmt"># 交件在 swarm/inbox/ 与 swarm/secretary/，发送必须 ask_user</span></pre></div>
+      </div>
+    </div>
+    <div class="scenario-item">
+      <div class="sc-hd" onclick="toggleScenario(this)">
+        <div><div class="scenario-head"><div class="sc-num" style="background:rgba(112,64,200,.12);color:var(--purple)">S10</div><h4>GUI 配置窗改快慢模型并加一条日程</h4></div><div class="sc-desc">顶栏齿轮；原文读项目 yaml；日程可多选启用</div></div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="sc-body">
+        <div class="code-block"><div class="code-hd"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div><div class="lang-tag">text</div><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+        <pre><span class="cmt">1. 顶栏齿轮或命令条「配置」</span>
+<span class="cmt">2. 运行时：routing.enabled=true</span>
+<span class="cmt">     agent.model     = {env:OMA_LLM_MODEL}     # 调研/审稿</span>
+<span class="cmt">     routing.fast_model = {env:OMA_FAST_MODEL} # writer/secretary</span>
+<span class="cmt">3. 保存… → 确认覆盖 → 勾选重载当前对话</span>
+<span class="cmt">4. 定时任务：新建一条 when=daily-05 agent=researcher，启用=开</span>
+<span class="cmt">   或关掉某条，只保留日更</span>
+<span class="cmt">5. 「立刻跑」只执行那一条，不改其它条</span>
+<span class="cmt">注意：原文路径应是项目里的 oma_config.yaml，</span>
+<span class="cmt">不要落在 AppData\Local\Temp\_MEI…（安装包临时目录）</span></pre></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ TEAM ═══════════════ -->
+<section class="section" id="sec-team">
+  <div class="sec-hd"><div class="sec-num">7</div><h2 class="sec-title">团队协作详解</h2></div>
+  <p class="sec-sub">orchestrator + worker 模式下的完整协作流程，Board 看板作为唯一通信渠道。</p>
+  <h3 class="stitle">角色权限对比</h3>
+  <div class="tbl-wrap"><table><thead><tr><th>能力</th><th>orchestrator</th><th>worker</th><th>any（默认）</th></tr></thead><tbody>
+    <tr><td>写文件 / edit_file</td><td><span class="badge b-red">禁止</span></td><td><span class="badge b-green">lease范围内</span></td><td><span class="badge b-green">允许</span></td></tr>
+    <tr><td>执行 bash</td><td><span class="badge b-red">禁止</span></td><td><span class="badge b-green">lease范围内</span></td><td><span class="badge b-green">允许</span></td></tr>
+    <tr><td>spawn_agent</td><td><span class="badge b-green">允许</span></td><td><span class="badge b-red">禁止</span></td><td><span class="badge b-green">允许</span></td></tr>
+    <tr><td>upsert_item（创建）</td><td><span class="badge b-green">允许</span></td><td><span class="badge b-red">禁止</span></td><td><span class="badge b-green">允许</span></td></tr>
+    <tr><td>post_item（评论）</td><td><span class="badge b-green">允许</span></td><td><span class="badge b-green">允许</span></td><td><span class="badge b-green">允许</span></td></tr>
+  </tbody></table></div>
+  <div class="two-col">
+    <div class="hl-box">
+      <h4 style="color:var(--blue2);margin-bottom:8px">collect 模式（默认推荐）</h4>
+      <p>子 Agent 后台异步运行，orchestrator 继续其他工作，需要结果时调用 <span class="ci">collect_agent("ready")</span>。并发效率高，适合独立子任务。</p>
+    </div>
+    <div class="hl-box">
+      <h4 style="color:var(--orange);margin-bottom:8px">sync 模式</h4>
+      <p>阻塞等待子 Agent 完成，直接返回结果。适合有严格依赖关系的串行子任务。</p>
+    </div>
+  </div>
+  <div class="alert a-warn"><div class="alert-icon">⚠️</div><b>关键约束</b>：orchestrator 不可调用 write_file / edit_file / bash，违反此约束会抛出 ToolError。Worker 之间通过 <span class="ci">post_item</span> 评论通信。根 bot 在 Board 仍有 ready/running 项时不能 finish（除非 force 并写「未完成」）。机械验收会检查 artifacts 路径是否存在且非空。</div>
+  <div class="alert a-info"><div class="alert-icon">ℹ️</div>办公产物默认租约 <span class="ci">swarm/&lt;agent&gt;/**</span>。code-change 里 implementer 的 exclusive_globs 应改成 explorer 指出的代码路径，不要锁死 <span class="ci">swarm/implementer/**</span>。</div>
+</section>
+
+<!-- ═══════════════ APPS ═══════════════ -->
+<section class="section" id="sec-apps">
+  <div class="sec-hd"><div class="sec-num">8</div><h2 class="sec-title">App 连接器使用指南</h2></div>
+  <p class="sec-sub">通过 YAML 声明将任意 HTTP REST API 变为 OMA 工具，无需编写一行 Python 代码。</p>
+  <div class="alert a-warn"><div class="alert-icon">⚠️</div>
+    当前工作区 <span class="ci">.oma/apps/github.yaml</span> 指向 api.github.com（需 <span class="ci">GITHUB_TOKEN</span>）。
+    <span class="ci">mail.yaml / calendar.yaml / docs.yaml</span> 仍是 example 域名，视为未接通：inbox / planner 只处理粘贴文本，禁止对假域名做发送测试。
+  </div>
+  <div class="code-block"><div class="code-hd"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div><div class="lang-tag">.oma/apps/jira.yaml</div><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+  <pre><span class="ky">name</span>: jira
+<span class="ky">base_url</span>: <span class="str">https://yourcompany.atlassian.net</span>
+<span class="ky">auth</span>:
+  <span class="ky">type</span>: basic
+  <span class="ky">user_env</span>: <span class="str">JIRA_EMAIL</span>
+  <span class="ky">pass_env</span>: <span class="str">JIRA_API_TOKEN</span>
+<span class="ky">ops</span>:
+  <span class="ky">list_issues</span>:
+    <span class="ky">method</span>: <span class="str">GET</span>
+    <span class="ky">path</span>: <span class="str">/rest/api/3/search</span>
+  <span class="ky">get_issue</span>:
+    <span class="ky">method</span>: <span class="str">GET</span>
+    <span class="ky">path</span>: <span class="str">/rest/api/3/issue/{issueKey}</span>
+  <span class="ky">create_issue</span>:
+    <span class="ky">method</span>: <span class="str">POST</span>
+    <span class="ky">path</span>: <span class="str">/rest/api/3/issue</span></pre></div>
+  <h3 class="stitle">支持的鉴权类型</h3>
+  <div class="tbl-wrap"><table><thead><tr><th>类型</th><th>配置示例</th><th>说明</th></tr></thead><tbody>
+    <tr><td><span class="badge b-blue">bearer</span></td><td><span class="ci">auth.type: bearer; auth.env: TOKEN</span></td><td>Authorization: Bearer {token}</td></tr>
+    <tr><td><span class="badge b-orange">header</span></td><td><span class="ci">auth.type: header; auth.header: X-API-Key</span></td><td>自定义请求头</td></tr>
+    <tr><td><span class="badge b-purple">basic</span></td><td><span class="ci">auth.type: basic; auth.user_env: USER</span></td><td>HTTP Basic Auth</td></tr>
+    <tr><td><span class="badge b-gray">none</span></td><td><span class="ci">auth.type: none</span></td><td>无鉴权（公开 API）</td></tr>
+  </tbody></table></div>
+</section>
+
+<section class="section" id="sec-bots">
+  <div class="sec-hd"><div class="sec-num">9</div><h2 class="sec-title">Bot &amp; 编排</h2></div>
+  <p class="sec-sub">一份花名册、一套产物契约、Playbook 只 upsert Board。不另写调度引擎。办公岗在 <span class="ci">.oma/agents</span>，编码岗在 <span class="ci">.opencode/agents</span>。</p>
+
+<div class="doc-section">
+  <p class="doc-section-lead">
+    数字员工不是「再堆人格」，而是 <strong>Catalog 名字 + Board + Lease + finish</strong>。
+    根 bot / orchestrator 命中流水线时 <span class="ci">use_skill name=company-playbooks</span>，
+    把步骤写成看板项再 <span class="ci">spawn_agent</span> / <span class="ci">collect_agent</span>。
+    工作台（Bots 标签）只是同一批 Catalog 的可视化入口，清单在
+    <span class="ci">.opencode/oma_gui_bots.json</span>。
+        编排模板另存在 <span class="ci">.opencode/oma_gui_playbooks.json</span>
+    与 <span class="ci">.opencode/playbooks/*.json</span>。Bots 编排页可新建 / 编辑 / AI 提案 / 导入导出，
+    保存后与 <span class="ci">company-playbooks</span>、<span class="ci">oma/playbooks.py</span> 三处 id 对齐。
+    爆款文章岗在 <span class="ci">.oma/agents</span>：viral-scout / viral-drafter / viral-editor，编排者 viral-orch。
+  </p>
+
+  <div class="alert a-info"><div class="alert-icon">ℹ️</div>
+    Catalog <b>先出现的同名赢</b>：工作区 <span class="ci">.oma/agents</span> →
+    <span class="ci">.opencode/agents</span> → 配置里的 extra 目录 → 用户主目录 → 包内
+    <span class="ci">oma/agents</span>。<span class="ci">default_bots/</span> 不在扫描路径，可删。
+  </div>
+
+  <div class="doc-h2">① 产物契约（所有 worker）</div>
+  <div class="tbl-wrap"><table><thead><tr><th>#</th><th>规则</th></tr></thead><tbody>
+    <tr><td>1</td><td>正文写入 <span class="ci">swarm/&lt;agent&gt;/&lt;topic&gt;.md</span>（表可用 .csv）</td></tr>
+    <tr><td>2</td><td><span class="ci">update_task_state.artifacts</span> 追加该相对路径</td></tr>
+    <tr><td>3</td><td><span class="ci">finish.criteria_check[].evidence</span> 必须带这个路径</td></tr>
+    <tr><td>4</td><td>不编造 URL、文件、价格、航班号、签名</td></tr>
+    <tr><td>5</td><td>worker 不 <span class="ci">spawn_agent</span>；不写 <span class="ci">oma_config.yaml</span> / <span class="ci">.git</span> / <span class="ci">runs</span></td></tr>
+    <tr><td>6</td><td>语言跟随用户（中 / 日 / 英）</td></tr>
+  </tbody></table></div>
+  <p>根 bot 每个 run 会读工作区 <span class="ci">.oma/MEMORY.md</span> 前 2000 字（公司记忆：语言、交付根目录、禁止自动发送、路径与 App 现状）。</p>
+
+  <div class="doc-h2">② 办公岗 · <span class="ci">.oma/agents</span></div>
+  <div class="bot-grid">
+
+    <div class="bot-item"><div class="bot-item-num">1</div><div class="bot-item-body">
+      <div class="bot-item-name">办公秘书</div>
+      <div class="bot-item-desc">商务函与公文草稿。标明待确认项。默认不发送、不代签。</div>
+      <div class="bot-item-meta"><span class="bot-item-tag">secretary</span><span class="bot-item-scene">📌 草案 · 不发送</span></div>
+    </div></div>
+    <div class="bot-item"><div class="bot-item-num">2</div><div class="bot-item-body">
+      <div class="bot-item-name">会议纪要</div>
+      <div class="bot-item-desc">出席 / 决议 / 待办 / 未决。不发明出席者与截止日期。</div>
+      <div class="bot-item-meta"><span class="bot-item-tag">minutes</span><span class="bot-item-scene">📌 会议闭环</span></div>
+    </div></div>
+    <div class="bot-item"><div class="bot-item-num">3</div><div class="bot-item-body">
+      <div class="bot-item-name">文书润色</div>
+      <div class="bot-item-desc">只改清晰度与语气，不改事实与数字。</div>
+      <div class="bot-item-meta"><span class="bot-item-tag">writer</span><span class="bot-item-scene">📌 公文出门</span></div>
+    </div></div>
+    <div class="bot-item"><div class="bot-item-num">4</div><div class="bot-item-body">
+      <div class="bot-item-name">一页简报</div>
+      <div class="bot-item-desc">结论 / 依据 / 风险 / 下一步。空数据写「待补充」。</div>
+      <div class="bot-item-meta"><span class="bot-item-tag">brief</span><span class="bot-item-scene">📌 决策包</span></div>
+    </div></div>
+    <div class="bot-item"><div class="bot-item-num">5</div><div class="bot-item-body">
+      <div class="bot-item-name">翻译</div>
+      <div class="bot-item-desc">中日英互译。先译文，再术语对照与不确定处。</div>
+      <div class="bot-item-meta"><span class="bot-item-tag">translator</span><span class="bot-item-scene">📌 ZH · JA · EN</span></div>
+    </div></div>
+    <div class="bot-item"><div class="bot-item-num">6</div><div class="bot-item-body">
+      <div class="bot-item-name">计划拆解</div>
+      <div class="bot-item-desc">步骤表与下一件能动手的事。不代做专家工作。</div>
+      <div class="bot-item-meta"><span class="bot-item-tag">planner</span><span class="bot-item-scene">📌 日程草案</span></div>
+    </div></div>
+    <div class="bot-item"><div class="bot-item-num">7</div><div class="bot-item-body">
+      <div class="bot-item-name">来信分诊</div>
+      <div class="bot-item-desc">分类 + 回复草稿。mail App 未接通则只用粘贴文本，禁止发送。</div>
+      <div class="bot-item-meta"><span class="bot-item-tag">inbox</span><span class="bot-item-scene">📌 邮箱未接通可跑</span></div>
+    </div></div>
+    <div class="bot-item"><div class="bot-item-num">8</div><div class="bot-item-body">
+      <div class="bot-item-name">调研</div>
+      <div class="bot-item-desc">web_search → web_fetch。每条事实附出处，禁止编链接。</div>
+      <div class="bot-item-meta"><span class="bot-item-tag">researcher</span><span class="bot-item-scene">📌 调研决策包</span></div>
+    </div></div>
+    <div class="bot-item"><div class="bot-item-num">9</div><div class="bot-item-body">
+      <div class="bot-item-name">事实核对</div>
+      <div class="bot-item-desc">已证实 / 未证实 / 矛盾。不补写故事。</div>
+      <div class="bot-item-meta"><span class="bot-item-tag">factcheck</span><span class="bot-item-scene">📌 交叉验证</span></div>
+    </div></div>
+    <div class="bot-item"><div class="bot-item-num">10</div><div class="bot-item-body">
+      <div class="bot-item-name">结构审稿</div>
+      <div class="bot-item-desc">审公文结构与产物路径。Pass / request-changes。不重写正文。</div>
+      <div class="bot-item-meta"><span class="bot-item-tag">critic</span><span class="bot-item-scene">📌 文稿出门</span></div>
+    </div></div>
+    <div class="bot-item"><div class="bot-item-num">11</div><div class="bot-item-body">
+      <div class="bot-item-name">代码审稿</div>
+      <div class="bot-item-desc">must-fix / nit。只审不改。critic 审文，本岗审代码。</div>
+      <div class="bot-item-meta"><span class="bot-item-tag">code-reviewer</span><span class="bot-item-scene">📌 改代码流水线</span></div>
+    </div></div>
+    <div class="bot-item"><div class="bot-item-num">12</div><div class="bot-item-body">
+      <div class="bot-item-name">GitHub 分诊</div>
+      <div class="bot-item-desc">只读 GitHub API，起草评论。写回必须 ask_user。无 token 则声明未接通。</div>
+      <div class="bot-item-meta"><span class="bot-item-tag">github-triage</span><span class="bot-item-scene">📌 真 API</span></div>
+    </div></div>
+    <div class="bot-item"><div class="bot-item-num">13</div><div class="bot-item-body">
+      <div class="bot-item-name">QA</div>
+      <div class="bot-item-desc">只跑已有测试，记录命令与失败日志。不改产品代码。</div>
+      <div class="bot-item-meta"><span class="bot-item-tag">qa</span><span class="bot-item-scene">📌 回归</span></div>
+    </div></div>
+    <div class="bot-item"><div class="bot-item-num">14</div><div class="bot-item-body">
+      <div class="bot-item-name">分流台</div>
+      <div class="bot-item-desc">把含糊目标收成 办公/开发/调研/文档 + 一条 playbook 或一个岗。自己不干活。</div>
+      <div class="bot-item-meta"><span class="bot-item-tag">intake</span><span class="bot-item-scene">📌 路由</span></div>
+    </div></div>
+    <div class="bot-item"><div class="bot-item-num">15</div><div class="bot-item-body">
+      <div class="bot-item-name">账款催记</div>
+      <div class="bot-item-desc">到期表 + 催款草稿。不编造余额。不发送。</div>
+      <div class="bot-item-meta"><span class="bot-item-tag">invoice</span><span class="bot-item-scene">📌 催款流水线</span></div>
+    </div></div>
+    <div class="bot-item"><div class="bot-item-num">16</div><div class="bot-item-body">
+      <div class="bot-item-name">客服分诊</div>
+      <div class="bot-item-desc">工单分类 P1–P3 + 回复草稿。不承诺未证实的退款/交期。</div>
+      <div class="bot-item-meta"><span class="bot-item-tag">support-triage</span><span class="bot-item-scene">📌 客服</span></div>
+    </div></div>
+    <div class="bot-item"><div class="bot-item-num">17</div><div class="bot-item-body">
+      <div class="bot-item-name">每周三件</div>
+      <div class="bot-item-desc">本周事实 + 下周恰好三件。决策简报另派 brief。</div>
+      <div class="bot-item-meta"><span class="bot-item-tag">weekly-review</span><span class="bot-item-scene">📌 一周收口</span></div>
+    </div></div>
+    <div class="bot-item"><div class="bot-item-num">18</div><div class="bot-item-body">
+      <div class="bot-item-name">摘要 / 表格 / 幻灯 / 出行 / 日常</div>
+      <div class="bot-item-desc">summarizer · table · slides · travel · personal。全部落盘到各自 swarm/ 目录。</div>
+      <div class="bot-item-meta"><span class="bot-item-tag">office+</span><span class="bot-item-scene">📌 文稿与生活</span></div>
+    </div></div>
+    <div class="bot-item"><div class="bot-item-num">19</div><div class="bot-item-body">
+      <div class="bot-item-name">编制生成</div>
+      <div class="bot-item-desc">harness-orch 只编排；harness-smith 写入 .oma/agents 与 .oma/skills。禁止写配置与 .git。</div>
+      <div class="bot-item-meta"><span class="bot-item-tag">harness-*</span><span class="bot-item-scene">📌 新专家</span></div>
+    </div></div>
+  </div>
+
+  <div class="doc-h2">③ 编码岗 · <span class="ci">.opencode/agents</span></div>
+  <div class="tbl-wrap"><table><thead><tr><th>名字</th><th>职责</th><th>写入</th></tr></thead><tbody>
+    <tr><td><span class="ci">main</span></td><td>默认主岗。命中流水线则 upsert Board，否则最小工具链。</td><td>按子岗租约</td></tr>
+    <tr><td><span class="ci">orchestrator</span></td><td>只拆派、回收、综合。不写仓库、不跑 bash。</td><td>无</td></tr>
+    <tr><td><span class="ci">explorer</span></td><td>只读摸清调用链。唯一可写路径 swarm/explorer/**。</td><td>swarm/explorer/</td></tr>
+    <tr><td><span class="ci">implementer</span></td><td>租约内最小补丁。code-change 时租约应是目标代码路径，不要锁死 swarm/implementer/**。</td><td>业务文件 + artifacts</td></tr>
+    <tr><td><span class="ci">web-scout</span></td><td>web_search → web_fetch 摘录。禁止 use_skill("webfetch")。</td><td>swarm/web-scout/</td></tr>
+    <tr><td><span class="ci">doc-editor</span></td><td>改 Markdown/文稿。不擅自改数字人名日期。</td><td>swarm/doc-editor/</td></tr>
+    <tr><td><span class="ci">genai-life-tips</span></td><td>可选科普写作岗。与编制主路径独立。</td><td>用户明确落盘时</td></tr>
+  </tbody></table></div>
+
+  <div class="doc-h2">④ Playbook → Board（不是第二套调度器）</div>
+  <p>定义在 <span class="ci">.oma/skills/company-playbooks/SKILL.md</span>、<span class="ci">oma/playbooks.py</span>、<span class="ci">.opencode/oma_gui_playbooks.json</span>。每步默认租约 <span class="ci">swarm/&lt;bot&gt;/**</span>。</p>
+  <div class="tbl-wrap"><table><thead><tr><th>id</th><th>流水线</th><th>步骤</th></tr></thead><tbody>
+    <tr><td><span class="ci">relay-draft</span></td><td>接力成稿</td><td>secretary → writer → brief</td></tr>
+    <tr><td><span class="ci">parallel-brief</span></td><td>并行汇总</td><td>researcher ∥ web-scout → summarizer</td></tr>
+    <tr><td><span class="ci">do-then-review</span></td><td>做完再审</td><td>writer → critic</td></tr>
+    <tr><td><span class="ci">meeting-loop</span></td><td>会议闭环</td><td>minutes → planner → secretary</td></tr>
+    <tr><td><span class="ci">material-slides</span></td><td>材料成片</td><td>summarizer → slides</td></tr>
+    <tr><td><span class="ci">inbox-loop</span></td><td>来信闭环</td><td>inbox → secretary（不发送）</td></tr>
+    <tr><td><span class="ci">weekly-close</span></td><td>一周收口</td><td>weekly-review → brief</td></tr>
+    <tr><td><span class="ci">chase-invoices</span></td><td>催款</td><td>invoice → secretary</td></tr>
+    <tr><td><span class="ci">code-change</span></td><td>改代码</td><td>explorer → implementer → qa → code-reviewer</td></tr>
+    <tr><td><span class="ci">issue-loop</span></td><td>仓库工单</td><td>github-triage → secretary（写回 GitHub 须 ask_user）</td></tr>
+    <tr><td><span class="ci">research-pack</span></td><td>调研决策包</td><td>researcher ∥ web-scout → factcheck → brief</td></tr>
+    <tr><td><span class="ci">doc-ship</span></td><td>文稿出门</td><td>doc-editor → writer → critic</td></tr>
+    <tr><td><span class="ci">content-pipeline</span></td><td>内容流水线</td><td>researcher ∥ web-scout → factcheck → brief → writer → critic。缺源则 request-changes 停</td></tr>
+    <tr><td><span class="ci">hit-article</span></td><td>爆款文章</td><td>viral-scout → viral-drafter → viral-editor。三平台成稿，不发帖。禁止 Swarm flush 并行</td></tr>
+  </tbody></table></div>
+  <div class="alert a-success"><div class="alert-icon">✅</div>
+    factcheck / critic 打不开上一岗产物或原始出处时必须 <span class="ci">request-changes</span> 并停止，禁止补写证据。
+    发布、发邮件、发帖一律 <span class="ci">ask_user</span>。
+  </div>
+  <div class="alert a-warn"><div class="alert-icon">⚠️</div>
+    不要再写 pipeline.yaml / 独立状态机。review 失败则把上一项打回 blocked，根 bot 停止。
+    对外发送、建日历、GitHub comment/create 一律 <span class="ci">ask_user</span>。
+  </div>
+
+  <div class="doc-h2">⑤ 日更与定时工位</div>
+  <p>日程写在工作区 <span class="ci">.oma/schedule.json</span>。GUI 配置窗「定时任务」页可查看、编辑、新建、启用/停用，并「立刻跑」某一条。</p>
+  <div class="tbl-wrap"><table><thead><tr><th>字段</th><th>含义</th></tr></thead><tbody>
+    <tr><td><span class="ci">id</span></td><td>编号，不要重复</td></tr>
+    <tr><td><span class="ci">when</span></td><td><span class="ci">daily-05</span>=本地 5 点后且当天未跑；<span class="ci">daily</span>=每次 runner 扫描；<span class="ci">manual</span>=只手动/立刻跑</td></tr>
+    <tr><td><span class="ci">enabled</span></td><td>false 时 cron 跳过该条</td></tr>
+    <tr><td><span class="ci">agent</span></td><td>编制里已有的岗位名，日更默认 researcher</td></tr>
+    <tr><td><span class="ci">goal</span></td><td>交给该岗位的任务正文。日更示例：过去 24 小时可核验进展，产物写到 swarm/researcher/</td></tr>
+  </tbody></table></div>
+  <div class="code-block"><div class="code-hd"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="lang-tag">cron</span></div>
+<pre>5 5 * * * cd /path/to/oma-core && python -m oma.schedule_runner --run
+python -m oma.schedule_runner --run --once-id daily-24h-research --force</pre></div>
+  <p>跑完写入 <span class="ci">swarm/BOARD.md</span> 与 <span class="ci">.oma/last_desk.json</span>。合上 GUI 也能跑，前提是这台机器的任务计划在。</p>
+
+  <div class="doc-h2">⑥ 快慢模型</div>
+  <p>子 agent 卡片的 <span class="ci">model:</span> 会传进 LLMClient。别名：<span class="ci">main</span> / 空 = 主模型；<span class="ci">fast</span> = 便宜模型。</p>
+  <div class="tbl-wrap"><table><thead><tr><th>项</th><th>说明</th></tr></thead><tbody>
+    <tr><td><span class="ci">OMA_LLM_MODEL</span></td><td>主模型。researcher / factcheck / critic 默认走这里</td></tr>
+    <tr><td><span class="ci">OMA_FAST_MODEL</span></td><td>便宜模型。writer / secretary 卡片写 model: fast</td></tr>
+    <tr><td><span class="ci">routing.enabled</span></td><td>默认开。关掉则全员主模型</td></tr>
+    <tr><td>降级</td><td>FAST 为空、开关关、或 HTTP 4xx/网络失败 → 自动改打主模型</td></tr>
+  </tbody></table></div>
+
+  <div class="doc-h2">⑦ 世界接口现状</div>
+  <div class="tbl-wrap"><table><thead><tr><th>App</th><th>状态</th><th>员工怎么做</th></tr></thead><tbody>
+    <tr><td><span class="ci">github</span></td><td><span class="badge b-green">真 API</span></td><td>需 GITHUB_TOKEN；默认只读，写回先问</td></tr>
+    <tr><td><span class="ci">httpbin</span></td><td><span class="badge b-teal">连通测试</span></td><td>不要塞生产数据</td></tr>
+    <tr><td><span class="ci">mail / calendar / docs</span></td><td><span class="badge b-orange">example 域名</span></td><td>视为未接通；只处理粘贴文本并写明「未接通」</td></tr>
+  </tbody></table></div>
+
+  <div class="doc-h2">⑧ 怎么调用</div>
+  <div class="doc-card-row">
+    <div class="doc-card">
+      <div class="doc-card-icon">💬</div>
+      <div class="doc-card-name">对话里 /名字</div>
+      <div class="doc-card-desc">输入 /secretary 或触发词，Catalog 命中后该岗成为 preferred agent。</div>
+      <span class="doc-card-tag">slash</span>
+    </div>
+    <div class="doc-card">
+      <div class="doc-card-icon">🐝</div>
+      <div class="doc-card-name">Swarm</div>
+      <div class="doc-card-desc">干活档可开 Swarm。按 description 触发词打分派岗，租约隔离写入。</div>
+      <span class="doc-card-tag">team.swarm</span>
+    </div>
+    <div class="doc-card">
+      <div class="doc-card-icon">📋</div>
+      <div class="doc-card-name">Playbook</div>
+      <div class="doc-card-desc">根 bot 读 company-playbooks，或代码 oma.playbooks.apply_to_run(rt, run, id, goal)。</div>
+      <span class="doc-card-tag">board items</span>
+    </div>
+    <div class="doc-card">
+      <div class="doc-card-icon">🖥</div>
+      <div class="doc-card-name">Bots 工作台</div>
+      <div class="doc-card-desc">选卡片、填任务、开始。仍走同一 Runtime，结果在对话里。</div>
+      <span class="doc-card-tag">oma_gui_bots.json</span>
+    </div>
+    <div class="doc-card">
+      <div class="doc-card-icon">⏰</div>
+      <div class="doc-card-name">定时工位</div>
+      <div class="doc-card-desc">配置窗「定时任务」或 cron 跑 schedule_runner。可多条、可停用、可立刻跑一条。</div>
+      <span class="doc-card-tag">schedule.json</span>
+    </div>
+    <div class="doc-card">
+      <div class="doc-card-icon">⚙️</div>
+      <div class="doc-card-name">配置窗</div>
+      <div class="doc-card-desc">顶栏齿轮。运行时 / 界面 / 定时任务 / 原文 / 当前生效。保存前确认。原文读项目 yaml，不读安装包 _MEI 临时副本。</div>
+      <span class="doc-card-tag">oma4_bot_gui</span>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">自定义新专家怎么加？</div>
+    <div class="faq-a">
+      对 harness-orch 说场景，或直接按契约写
+      <span class="ci">.oma/agents/&lt;name&gt;.md</span> 与可选
+      <span class="ci">.oma/skills/&lt;name&gt;/SKILL.md</span>。
+      description 里放中日英触发词，Swarm 才能打到。不要再往
+      <span class="ci">default_bots/</span> 或 <span class="ci">bots/*.yaml</span> 写影子卡。
+    </div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">和「四人格内容团队」差在哪？</div>
+    <div class="faq-a">
+      岗位哲学同向：调研 → 选题 → 起草 → 终审。OMA 用现成 researcher / brief / writer / critic，
+      交接靠 <span class="ci">swarm/&lt;岗&gt;/</span> 而不是共用一个大上下文。
+      还缺的是外部日历（Notion）和离线持续开工——后者用本机 cron + schedule.json 补，不必再造四个英文岗。
+    </div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">能力会不会因为契约变弱？</div>
+    <div class="faq-a">
+      不会。工具集没减。变严的是乱写、编出处、假装已发送。
+      办公和调研因此更能交件；开发靠 explorer / implementer / qa / code-reviewer 闭环。
+    </div>
+  </div>
+</div>
+</section>
+
+
+<!-- ═══════════════ GUI ═══════════════ -->
+<section class="section" id="sec-gui">
+  <div class="sec-hd"><div class="sec-num">10</div><h2 class="sec-title">GUI 桌面端</h2></div>
+  <p class="sec-sub">oma4_bot_gui.py 提供完整的可视化交互界面，支持多对话并发、皮肤切换、文件拖拽等高级功能。</p>
+
+  <h3 class="stitle">界面预览（印刷纸皮肤）</h3>
+  <div class="mockup-outer">
+    <div class="gui-win">
+      <div class="gui-titlebar">
+        <div class="gui-titlebar-left"><span>🤖</span></div>
+        <div class="gui-titlebar-center">OMA - BOT</div>
+        <div class="win-ctrl"><span class="wc wc-r"></span><span class="wc wc-y"></span><span class="wc wc-g"></span></div>
+      </div>
+      <div class="gui-toolbar">
+        <div class="gui-tb-cfg">📄 oma_config.yaml</div>
+        <span class="gui-btn green">● 就绪</span>
+        <span class="gui-btn active">⚡ 快速</span>
+        <span class="gui-btn">默认</span>
+        <span class="gui-btn">印刷纸</span>
+        <div class="gui-sep"></div>
+        <span class="gui-tab active">任务</span>
+        <span class="gui-tab">Bots</span>
+        <span class="gui-tab">日志</span>
+        <span class="gui-tab">文件</span>
+        <div class="gui-tb-right">
+          <span class="gui-ico">🔢</span><span class="gui-ico">🔄</span>
+          <span class="gui-ico">📤</span><span class="gui-ico">🎨</span>
+          <span class="gui-ico">⚙️</span><span class="gui-ico">↻</span><span class="gui-ico">⬇</span>
+        </div>
+      </div>
+      <div class="gui-body">
+        <div class="gui-rail">
+          <div class="gui-proj-ic active" style="background:linear-gradient(135deg,#e04060,#c82848)">O</div>
+          <div class="gui-proj-ic" style="background:linear-gradient(135deg,#2a8a5e,#1a6a48)">O</div>
+          <div class="gui-proj-ic" style="background:linear-gradient(135deg,#1a6bbd,#0a4a9a)">O</div>
+          <div class="gui-proj-ic" style="background:linear-gradient(135deg,#7040c8,#4a28a0)">O</div>
+          <div class="gui-proj-ic" style="background:linear-gradient(135deg,#c8620a,#a04808)">O</div>
+        </div>
+        <div class="gui-sidebar">
+          <div class="gui-sb-proj">
+            <div class="gui-sb-proj-name">oma-core
+              <div class="gui-sb-proj-icons">
+                <span class="gui-sb-icon">📁</span>
+                <span class="gui-sb-icon">&lt;/&gt;</span>
+                <span class="gui-sb-icon">📷</span>
+              </div>
+            </div>
+            <div class="gui-sb-proj-path">D:\huang\data\working\python\oma-core</div>
+          </div>
+          <div class="gui-new-conv">✏️ 新建会话</div>
+          <div class="gui-conv-list">
+            <div class="gui-conv-item active">
+              <div class="gui-conv-title">你会哪些技能？_09:21</div>
+              <div class="gui-conv-meta">09:21 · oma-core</div>
+            </div>
+            <div class="gui-conv-item">
+              <div class="gui-conv-title">你好Fa_16:13</div>
+              <div class="gui-conv-meta">16:13 · oma-core</div>
+            </div>
+          </div>
+          <div class="gui-running-toggle">
+            仅运行中
+            <div class="gui-mini-toggle"><div class="gui-mini-knob"></div></div>
+          </div>
+        </div>
+        <div class="gui-chat">
+          <div class="gui-chat-scroll" id="mockup-scroll">
+            <div class="gui-msg-agent" style="max-width:70%">
+              <div class="gui-msg-text">Hello! 👋<br>How can I help you today? I'm ready to assist with whatever you need.</div>
+            </div>
+            <div class="gui-msg-sys"><span>⚙️</span>[系统] 🔥 任务耗时: 42.14 秒</div>
+            <div class="gui-msg-user">
+              <div class="gui-msg-user-hd">
+                <span class="gui-user-tag">● 用户</span>
+                <div class="gui-msg-icons"><span class="gui-msg-ic">📋</span><span class="gui-msg-ic">✏️</span><span class="gui-msg-ic">⋯</span></div>
+              </div>
+              <div class="gui-msg-user-text">你好啊</div>
+            </div>
+            <div class="gui-msg-agent">
+              <div class="gui-msg-agent-hd">
+                <span class="gui-agent-tag">🤖 Agent <span class="gui-agent-model">deepseek-v4-flash</span></span>
+                <div class="gui-msg-icons"><span class="gui-msg-ic">📋</span><span class="gui-msg-ic">🗑</span></div>
+              </div>
+              <div class="gui-msg-text">
+                你好啊！👋<br><br>
+                我是你的 AI 助手，可以帮你处理各种任务，比如：<br><br>
+                <div class="gui-list-item">📄 写文档/改文稿（Word、Markdown、演示大纲等）</div>
+                <div class="gui-list-item">🔍 查资料、做调研（网页抓取、要点整理）</div>
+                <div class="gui-list-item">📊 整理数据、做表格</div>
+                <div class="gui-list-item">📧 草拟邮件、消息回复</div>
+                <div class="gui-list-item">💡 拆解目标、做计划</div>
+                <div class="gui-list-item">⌨️ 写代码、查代码、跑测试</div>
+                <br>有什么我可以帮你的吗？直接说你的想法就行～
+              </div>
+            </div>
+            <div class="gui-msg-sys"><span>⚙️</span>[系统] 🔥 任务耗时: 41.11 秒</div>
+            <div class="gui-msg-user">
+              <div class="gui-msg-user-hd">
+                <span class="gui-user-tag">● 用户</span>
+                <div class="gui-msg-icons"><span class="gui-msg-ic">📋</span><span class="gui-msg-ic">✏️</span><span class="gui-msg-ic">⋯</span></div>
+              </div>
+              <div class="gui-msg-user-text">你会哪些技能?</div>
+            </div>
+            <div class="gui-think">
+              <span class="gui-think-l">
+                <div class="gui-msg-icons" style="margin-right:4px"><span class="gui-msg-ic">📋</span><span class="gui-msg-ic">🗑</span></div>
+                💭 思考过程
+              </span>
+              <span class="gui-think-arr">▼</span>
+            </div>
+            <div class="gui-msg-agent">
+              <div class="gui-msg-agent-hd">
+                <span class="gui-agent-tag">🤖 Agent <span class="gui-agent-model">deepseek-v4-flash</span></span>
+                <div class="gui-msg-icons"><span class="gui-msg-ic">📋</span><span class="gui-msg-ic">🗑</span></div>
+              </div>
+              <div class="gui-msg-text" style="color:#aaa">正在生成回复…</div>
+            </div>
+          </div>
+          <div class="gui-input-bar">
+            <div class="gui-input">输入任务... / 选 Skill · Agent &nbsp;·&nbsp; @ 搜索文件 &nbsp;·&nbsp; 拖拽文件为附件 &nbsp;·&nbsp; Ctrl+Enter 发送</div>
+            <button class="gui-send-btn">▶ 发送</button>
+            <span style="font-size:14px;color:#8a8480;cursor:pointer">⋮</span>
+          </div>
+        </div>
+      </div>
+      <div class="gui-status">
+        <span>[09:57:58]</span>
+        <span class="gui-status-dot"></span>
+        <span>皮肤 → 印刷纸（已保存，下次启动生效）</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ★ Bot 工作台效果图 ★ -->
+<h3 class="stitle">Bot 工作台预览（Bots 标签）</h3>
+<div class="mockup-outer">
+  <div class="gui-win">
+
+    <!-- Titlebar -->
+    <div class="gui-titlebar">
+      <div class="gui-titlebar-left"><span>🤖</span></div>
+      <div class="gui-titlebar-center">OMA - BOT</div>
+      <div class="win-ctrl">
+        <span class="wc wc-r"></span>
+        <span class="wc wc-y"></span>
+        <span class="wc wc-g"></span>
+      </div>
+    </div>
+
+    <!-- Toolbar — Bots 标签激活 -->
+    <div class="gui-toolbar">
+      <div class="gui-tb-cfg">📄 oma_config.yaml</div>
+      <span class="gui-btn green">● 就绪</span>
+      <span class="gui-btn active">⚡ 快速</span>
+      <span class="gui-btn">默认</span>
+      <span class="gui-btn">印刷纸</span>
+      <div class="gui-sep"></div>
+      <span class="gui-tab">任务</span>
+      <span class="gui-tab active">Bots</span>
+      <span class="gui-tab">日志</span>
+      <span class="gui-tab">文件</span>
+      <div class="gui-tb-right">
+        <span class="gui-ico">🔢</span><span class="gui-ico">🔄</span>
+        <span class="gui-ico">📤</span><span class="gui-ico">🎨</span>
+        <span class="gui-ico">⚙️</span><span class="gui-ico">↻</span><span class="gui-ico">⬇</span>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="gui-body">
+
+      <!-- 项目图标轨道 -->
+      <div class="gui-rail">
+        <div class="gui-proj-ic active" style="background:linear-gradient(135deg,#e04060,#c82848)">O</div>
+        <div class="gui-proj-ic" style="background:linear-gradient(135deg,#2a8a5e,#1a6a48)">O</div>
+        <div class="gui-proj-ic" style="background:linear-gradient(135deg,#1a6bbd,#0a4a9a)">O</div>
+        <div class="gui-proj-ic" style="background:linear-gradient(135deg,#7040c8,#4a28a0)">O</div>
+        <div class="gui-proj-ic" style="background:linear-gradient(135deg,#c8620a,#a04808)">O</div>
+      </div>
+
+      <!-- 左侧边栏 -->
+      <div class="gui-sidebar">
+        <div class="gui-sb-proj">
+          <div class="gui-sb-proj-name">oma-core
+            <div class="gui-sb-proj-icons">
+              <span class="gui-sb-icon">📁</span>
+              <span class="gui-sb-icon">&lt;/&gt;</span>
+              <span class="gui-sb-icon">📷</span>
+            </div>
+          </div>
+          <div class="gui-sb-proj-path">D:\huang\data\working\python\oma-core</div>
+        </div>
+        <div class="gui-new-conv">✏️ 新建会话</div>
+        <div style="padding:5px 10px 3px;font-size:9.5px;color:#8a8480;
+                    display:flex;align-items:center;justify-content:space-between">
+          <span>对话</span>
+          <div style="display:flex;align-items:center;gap:4px">
+            仅运行中
+            <div class="gui-mini-toggle"><div class="gui-mini-knob"></div></div>
+          </div>
+        </div>
+        <div class="gui-conv-list">
+          <div class="gui-conv-item active">
+            <div class="gui-conv-title">你会哪些技能？_09:21</div>
+            <div class="gui-conv-meta">09:21 · oma-core</div>
+          </div>
+          <div class="gui-conv-item">
+            <div class="gui-conv-title">你好Fa_16:13</div>
+            <div class="gui-conv-meta">16:13 · oma-core</div>
+          </div>
+        </div>
+      </div>
+
+    <!-- ★ Bot 工作台主区域 ★ -->
+    <div class="gui-bots-wrap">
+
+      <!-- 左：Bot 列表 -->
+      <div class="gui-bot-list">
+        <div class="gui-bot-list-hd">
+          <span class="gui-bot-list-hd-title">
+            Bot 工作台
+            <span class="gui-bot-list-hd-help">?</span>
+          </span>
+          <span class="gui-bot-list-edit-btn">编辑</span>
+        </div>
+        <div class="gui-bot-scroll">
+          <div class="gui-bot-card bact">
+            <div class="gui-bot-card-name">办公秘书</div>
+            <div class="gui-bot-card-desc">邮件、通知、请示：短、得体、草案默认不发送</div>
+            <div class="gui-bot-card-tag">secretary</div>
+          </div>
+          <div class="gui-bot-card">
+            <div class="gui-bot-card-name">会议纪要</div>
+            <div class="gui-bot-card-desc">把杂乱发言整理成决议、待办、责任人</div>
+            <div class="gui-bot-card-tag">minutes</div>
+          </div>
+          <div class="gui-bot-card">
+            <div class="gui-bot-card-name">文书润色</div>
+            <div class="gui-bot-card-desc">改书面材料：通顺、结构清楚、保持原意</div>
+            <div class="gui-bot-card-tag">writer</div>
+          </div>
+          <div class="gui-bot-card">
+            <div class="gui-bot-card-name">翻译</div>
+            <div class="gui-bot-card-desc">中英日互译，先译文后注释术语</div>
+            <div class="gui-bot-card-tag">translator</div>
+          </div>
+          <div class="gui-bot-card">
+            <div class="gui-bot-card-name">计划拆解</div>
+            <div class="gui-bot-card-desc">把目标拆成可执行步骤、顺序和风险</div>
+            <div class="gui-bot-card-tag">planner</div>
+          </div>
+          <div class="gui-bot-card">
+            <div class="gui-bot-card-name">个人助理</div>
+            <div class="gui-bot-card-desc">日常杂事：清单、提醒草稿、对比选择</div>
+            <div class="gui-bot-card-tag">personal</div>
+          </div>
+          <div class="gui-bot-card">
+            <div class="gui-bot-card-name">文档改稿</div>
+            <div class="gui-bot-card-desc">改 Word/Markdown：删改、结构、批注式修订</div>
+            <div class="gui-bot-card-tag">doc-editor</div>
+          </div>
+          <div class="gui-bot-card">
+            <div class="gui-bot-card-name">调研整理</div>
+            <div class="gui-bot-card-desc">收集要点、对照来源、标出未知、不编链接</div>
+            <div class="gui-bot-card-tag">researcher</div>
+          </div>
+        </div>
+        <div class="gui-bot-list-add">🆕 新建 Bot</div>
+      </div>
+
+      <!-- 右：Bot 详情 + 任务配置 -->
+      <div class="gui-bot-detail-area">
+
+        <!-- 详情头部 -->
+        <div class="gui-bot-detail-hd">
+          <div class="gui-bot-detail-info">
+            <div class="gui-bot-detail-name">办公秘书</div>
+            <div class="gui-bot-detail-path">/secretary</div>
+            <div class="gui-bot-detail-desc-text">邮件、通知、请示：短、得体、草案默认不发送</div>
+            <div class="gui-bot-detail-mode">默认模式 default &nbsp;·&nbsp; disk</div>
+          </div>
+          <div class="gui-bot-detail-btns">
+            <button class="gui-dbtn gui-dbtn-use">▶ 使用</button>
+            <button class="gui-dbtn gui-dbtn-edit">✏️ 编辑</button>
+            <button class="gui-dbtn gui-dbtn-del">🗑 删除</button>
+          </div>
+        </div>
+
+        <!-- 布置任务 -->
+        <div class="gui-bot-task-cfg">
+          <div class="gui-bot-task-cfg-title">布置任务</div>
+          <textarea class="gui-bot-task-input"
+            placeholder="写清楚要它做什么。开始后会开一条对话，结果在下方点开。"
+            readonly></textarea>
+          <div class="gui-bot-task-footer">
+            <button class="gui-bot-start">▶ 开始任务</button>
+          </div>
+        </div>
+
+        <!-- 任务列表 -->
+        <div class="gui-bot-task-list">
+          <div class="gui-bot-task-list-title">任务 (0)</div>
+          <div class="gui-bot-task-list-empty">还没有任务。</div>
+        </div>
+
+      </div><!-- /detail-area -->
+    </div><!-- /bots-wrap -->
+
+  </div><!-- /gui-body -->
+
+  <!-- 状态栏 -->
+  <div class="gui-status">
+    <span>[09:58:42]</span>
+    <span class="gui-status-dot" style="background:#28c840"></span>
+    <span>Bot 工作台 · Catalog 花名册 · 选中「办公秘书」· 产物写到 swarm/secretary/</span>
+  </div>
+
+</div><!-- /gui-win -->
+</div><!-- /mockup-outer -->
+
+  <h3 class="stitle" style="margin-top:36px">功能特性</h3>
+  <div class="card-grid">
+    <div class="card"><div class="card-icon">💬</div><h4>多对话并发</h4><p>每个对话独立 Agent 实例，互不干扰。侧栏显示 🔄 运行中标记，随时切换查看。</p></div>
+    <div class="card"><div class="card-icon">📁</div><h4>项目图标轨</h4><p>侧栏左侧固定项目图标，点击切换，右键关闭。持久化到 ~/.oma_open_projects.json。</p></div>
+    <div class="card"><div class="card-icon">🎨</div><h4>11 套皮肤</h4><p>印刷纸、宣纸、青瓷、琥珀书房、雾蓝等，全部 CSS 变量实现，切换零重建 UI。</p></div>
+    <div class="card"><div class="card-icon">🤖</div><h4>Bot 工作台</h4><p>预定义 Bot 模板可视化管理、执行、查看结果，适合批量重复性任务。</p></div>
+    <div class="card"><div class="card-icon">📎</div><h4>拖拽附件</h4><p>拖文件到输入框自动插入路径，图片自动添加 analyze_image 提示，&gt;15MB 警告。</p></div>
+    <div class="card"><div class="card-icon">⌨️</div><h4>Slash 补全</h4><p>输入 / 触发 Skill/Agent 补全；@ 触发项目文件路径补全，方向键选择。</p></div>
+    <div class="card"><div class="card-icon">🧠</div><h4>推理气泡</h4><p>执行中实时显示推理过程，完成后自动折叠为可展开的「思考过程」块。</p></div>
+    <div class="card"><div class="card-icon">💾</div><h4>导出功能</h4><p>对话导出为 Markdown，系统原生另存为对话框，可选是否包含思考过程。</p></div>
+    <div class="card"><div class="card-icon">⚙️</div><h4>配置窗</h4><p>查看/编辑 oma_config.yaml 与 oma_gui.yaml。每项带说明。覆盖保存前确认。可重载当前对话。</p></div>
+    <div class="card"><div class="card-icon">⏰</div><h4>定时任务</h4><p>多条日程、启用开关、立刻跑。读项目 .oma/schedule.json，不读安装包临时目录。</p></div>
+  </div>
+
+  <h3 class="stitle">键盘快捷键</h3>
+  <div class="tbl-wrap"><table><thead><tr><th>快捷键</th><th>功能</th></tr></thead><tbody>
+    <tr><td><span class="badge b-gray">Ctrl + Enter</span></td><td>发送任务</td></tr>
+    <tr><td><span class="badge b-gray">Ctrl + 滚轮</span></td><td>调整字体大小，跨重连持久保留</td></tr>
+    <tr><td><span class="badge b-gray">/ + 关键词</span></td><td>触发 Skill / Agent 补全</td></tr>
+    <tr><td><span class="badge b-gray">@ + 关键词</span></td><td>触发项目文件路径补全</td></tr>
+    <tr><td><span class="badge b-gray">↑ ↓ Enter</span></td><td>导航并确认补全选项</td></tr>
+    <tr><td><span class="badge b-gray">Esc</span></td><td>关闭补全菜单</td></tr>
+  </tbody></table></div>
+</section>
+
+</main>
+
+<script>
+/* ── Progress bar ── */
+window.addEventListener('scroll',()=>{
+  const d=document.documentElement;
+  document.getElementById('progress').style.width=
+    (d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';
+});
+
+/* ── Theme toggle ── */
+const html=document.documentElement;
+const btn=document.getElementById('themeToggleBtn');
+const icon=document.getElementById('themeIcon');
+const lbl=document.getElementById('themeLabel');
+function applyTheme(t){
+  html.setAttribute('data-theme',t);
+  icon.textContent=t==='dark'?'🌙':'☀️';
+  lbl.textContent=t==='dark'?'暗色模式':'亮色模式';
+  localStorage.setItem('oma-theme',t);
+}
+applyTheme(localStorage.getItem('oma-theme')||'light');
+btn.addEventListener('click',()=>{
+  applyTheme(html.getAttribute('data-theme')==='dark'?'light':'dark');
+});
+
+/* ── Nav scroll highlight ── */
+const sMap={};
+document.querySelectorAll('.nav-item').forEach(n=>{if(n.dataset.target)sMap[n.dataset.target]=n});
+document.querySelectorAll('.section,.hero').forEach(s=>{
+  new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){
+      document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+      const ni=sMap[e.target.id];if(ni)ni.classList.add('active');
+    }});
+  },{threshold:0.15,rootMargin:'-60px 0px -60px 0px'}).observe(s);
+});
+document.querySelectorAll('.nav-item').forEach(item=>{
+  item.addEventListener('click',()=>{
+    const el=document.getElementById(item.dataset.target);
+    if(el)el.scrollIntoView({behavior:'smooth'});
+  });
+});
+
+/* ── Tabs ── */
+document.querySelectorAll('.tabs').forEach(tabs=>{
+  tabs.querySelectorAll('.tab').forEach(tab=>{
+    tab.addEventListener('click',()=>{
+      tabs.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      tab.classList.add('active');
+      const pid=tab.dataset.tab;
+      const section=tabs.closest('.section')||tabs.parentElement;
+      section.querySelectorAll('.tab-panel').forEach(p=>{
+        p.classList.toggle('active',p.id===pid);
+      });
+    });
+  });
+});
+
+/* ── Tool filter ── */
+const filterBtns=document.querySelectorAll('.filter-btn');
+const toolRows=document.querySelectorAll('#tools-table tbody tr');
+filterBtns.forEach(b=>{
+  b.addEventListener('click',()=>{
+    filterBtns.forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    const f=b.dataset.filter;
+    toolRows.forEach(r=>{r.style.display=(f==='all'||r.dataset.cat===f)?'':'none'});
+  });
+});
+document.getElementById('tool-search').addEventListener('input',function(){
+  const q=this.value.toLowerCase();
+  const af=document.querySelector('.filter-btn.on')?.dataset?.filter||'all';
+  toolRows.forEach(r=>{
+    const co=af==='all'||r.dataset.cat===af;
+    r.style.display=(co&&r.textContent.toLowerCase().includes(q))?'':'none';
+  });
+});
+
+/* ── Scenario accordion ── */
+function toggleScenario(hd){
+  const body=hd.nextElementSibling;
+  const chev=hd.querySelector('.chevron');
+  body.classList.toggle('open');
+  hd.classList.toggle('open');
+  if(chev)chev.classList.toggle('open');
+}
+
+/* ── Copy code ── */
+function copyCode(btn){
+  const text=btn.closest('.code-block').querySelector('pre').innerText;
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent='已复制!';
+    setTimeout(()=>{btn.textContent='复制'},1500);
+  }).catch(()=>{
+    const ta=Object.assign(document.createElement('textarea'),
+      {value:text,style:'position:fixed;top:-9999px'});
+    document.body.appendChild(ta);ta.select();
+    document.execCommand('copy');document.body.removeChild(ta);
+    btn.textContent='已复制!';
+    setTimeout(()=>{btn.textContent='复制'},1500);
+  });
+}
+
+/* ── Open first scenario & scroll mockup ── */
+document.addEventListener('DOMContentLoaded',()=>{
+  const first=document.querySelector('.sc-hd');
+  if(first)toggleScenario(first);
+  const ms=document.getElementById('mockup-scroll');
+  if(ms)ms.scrollTop=ms.scrollHeight;
+});
+</script>
+</body>
+</html>
